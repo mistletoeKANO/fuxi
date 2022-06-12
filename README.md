@@ -21,9 +21,12 @@
 
 ## 配置截图
 
-![Snipaste_2022-06-12_22-04-38](https://user-images.githubusercontent.com/33541704/173237069-08a23886-411b-4276-ba15-2961abec5bc0.png)
-![Snipaste_2022-06-12_22-04-25](https://user-images.githubusercontent.com/33541704/173237086-64464024-d194-4122-a7fd-e8a9cd434a2d.png)
+1.项目资源配置
 ![Snipaste_2022-06-12_22-03-24](https://user-images.githubusercontent.com/33541704/173237090-e6fa0a2e-a62d-41d0-82d5-c83a85a45355.png)
+2.分包配置
+![Snipaste_2022-06-12_22-04-25](https://user-images.githubusercontent.com/33541704/173237086-64464024-d194-4122-a7fd-e8a9cd434a2d.png)
+3.设置
+![Snipaste_2022-06-12_22-04-38](https://user-images.githubusercontent.com/33541704/173237069-08a23886-411b-4276-ba15-2961abec5bc0.png)
 
 ## 注意事项
 
