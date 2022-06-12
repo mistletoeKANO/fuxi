@@ -21,17 +21,17 @@
 
 ## 配置截图
 
-1.项目资源配置
+1.项目资源配置, 热更 动态加载 资源列表
 
-![项目资源配置](https://user-images.githubusercontent.com/33541704/173237090-e6fa0a2e-a62d-41d0-82d5-c83a85a45355.png)
+![asset](https://user-images.githubusercontent.com/33541704/173237430-d204dbb2-2ff6-441b-b28b-126b09cf3ce5.png)
 
-2.分包配置
+2.分包配置, 分包下载 每个 分包 包含的资源列表
 
-![分包配置](https://user-images.githubusercontent.com/33541704/173237086-64464024-d194-4122-a7fd-e8a9cd434a2d.png)
+![package](https://user-images.githubusercontent.com/33541704/173237445-e6782f72-926e-4f22-b5fc-c6271f25099f.png)
 
-3.设置
+3.设置, 配置 内置 包, 打包 加密 相关配置
 
-![设置](https://user-images.githubusercontent.com/33541704/173237069-08a23886-411b-4276-ba15-2961abec5bc0.png)
+![setting](https://user-images.githubusercontent.com/33541704/173237455-789474a5-58a4-40b7-af7e-7df389052b35.png)
 
 ## 注意事项
 
