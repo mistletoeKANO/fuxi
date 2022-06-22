@@ -1,0 +1,22 @@
+﻿#GraphBG{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+#RootElement{
+    flex-grow: 1;
+}
+
+#GraphView{
+    border-width: 1;
+    border-color: black;
+    margin: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#StyleItem{
+    margin: 2px;
+}

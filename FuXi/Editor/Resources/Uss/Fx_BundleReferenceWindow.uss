@@ -1,0 +1,61 @@
+.bf-toolbar{
+    height: 21px;
+    min-height: 21px;
+    border-top-width: 1px;
+}
+.bf-toolbar-enum{
+    width: 100px;
+}
+
+.bf-main-view-header{
+    height: 20px;
+    min-height: 20px;
+    max-height: 20px;
+    background-color: rgba(0,0,0,0.76);
+}
+
+.bf-main-view{
+    flex-grow: 1;
+}
+.bf-main-view-bg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: resource("Fx_ReferenceView");
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.bf-main-view-scroll-view{
+    background-color: rgba(0,0,0,0.56);
+}
+
+.bf-main-view-scroll-view > Button{
+    padding: 0;
+}
+
+.bf-footer{
+    height: 20px;
+    min-height: 20px;
+    border-top-width: 1px;
+    border-color: rgba(1, 1, 1, 0.4);
+}
+
+.bf-footer-label{
+    flex-grow: 1;
+    height: 20px;
+    min-height: 20px;
+    max-height: 20px;
+    padding-left: 6px;
+    border-bottom-width: 1px;
+    border-color: rgba(1, 1, 1, 0.4);
+    -unity-text-align: middle-left;
+}
+.bf-footer-header{
+    flex-grow: 1;
+    height: 20px;
+    cursor: split-resize-up-down;
+}
+
+.bf-footer-view{
+    
+}

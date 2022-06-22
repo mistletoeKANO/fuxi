@@ -1,0 +1,7 @@
+.fx-buildAsset-main{
+    flex-grow: 1;
+}
+
+.fx-buildAsset-foot{
+    margin-top: 3px;
+}

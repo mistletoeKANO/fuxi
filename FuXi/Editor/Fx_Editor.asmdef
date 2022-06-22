@@ -1,0 +1,19 @@
+{
+    "name": "FuXi.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3cb8e2b64ae58f7489b88bc90a7703b9",
+        "GUID:1c64a098c7bf73e4ba2651fb3807a7f4"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
