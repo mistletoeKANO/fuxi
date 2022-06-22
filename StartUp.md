@@ -57,8 +57,14 @@ if (download.DownloadSize > 0)
 ## 加载资源 
 
 1. FxAsset 加载 资源, 相关接口 自行查看
-2. FxScene 加载 场景
-3. FxRawAsset 加载 原生文件
+``
+FxAsset fxAsset = await FxAsset.LoadAsync<GameObject>(path);
+``
+3. FxScene 加载 场景
+``
+await FxScene.LoadSceneAsync(scenePath, additive);
+``
+5. FxRawAsset 加载 原生文件
 
 
 
