@@ -1,6 +1,6 @@
 # 伏羲 (FuXi) 
 
-[![License](https://img.shields.io/github/license/mistletoeKANO/fuxi)]([https://github.com/tuyoogame/YooAsset/blob/master/LICENSE](https://github.com/mistletoeKANO/fuxi-example/blob/main/LICENSE))[![openupm](https://img.shields.io/npm/v/com.tendo.fuxi?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.cn/packages/com.tendo.fuxi/)
+[![License](https://img.shields.io/github/license/mistletoeKANO/fuxi)]([https://github.com/mistletoeKANO/fuxi/blob/master/LICENSE](https://github.com/mistletoeKANO/fuxi/blob/main/LICENSE))[![openupm](https://img.shields.io/npm/v/com.tendo.fuxi?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.cn/packages/com.tendo.fuxi/)
 
 AssetBundle 资源管理 和 加载 插件
 
@@ -48,7 +48,9 @@ AssetBundle 资源管理 和 加载 插件
 1.加密方式为 XOR 时,不支持内置Bundle文件到安装包内, 主要是XOR加密方式需以文件流形式读取解密, StreamingAssets文件夹 不支持相关操作! 如需 XOR 加密, Bundle 文件需先下载 后使用.
 
 ## 其它
-说明: [StartUP](https://github.com/mistletoeKANO/fuxi/blob/main/StartUp.md)
+
+说明: [StartUp](https://github.com/mistletoeKANO/fuxi/blob/main/StartUp.md)
+
 示例工程: [FuXi_Example](https://github.com/mistletoeKANO/fuxi-example)
 
 QQ讨论群: 613889898
