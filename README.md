@@ -33,6 +33,15 @@ AssetBundle 资源管理 和 加载 插件
 
 ![setting](https://user-images.githubusercontent.com/33541704/173237455-789474a5-58a4-40b7-af7e-7df389052b35.png)
 
+## 资源引用动态分析工具 截图
+
+1. Bundle引用分析截图
+![Bundle引用分析](https://user-images.githubusercontent.com/33541704/175015909-124be746-de0c-4da0-9ba9-a9f1dcb6f0e5.png)
+
+2. Asset引用分析截图
+![Asset引用分析](https://user-images.githubusercontent.com/33541704/175016039-cfa83c2a-4e2f-4b4f-aaf3-64121d0e31be.png)
+
+
 ## 注意事项
 
 1.加密方式为 XOR 时,不支持内置Bundle文件到安装包内, 主要是XOR加密方式需以文件流形式读取解密, StreamingAssets文件夹 不支持相关操作! 如需 XOR 加密, Bundle 文件需先下载 后使用.
