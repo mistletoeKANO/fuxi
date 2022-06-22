@@ -12,6 +12,25 @@
 6. Change Packages to My Registries
 7. Install FuXi
 
+### 或者 拷贝以下内容 到 Packages/manifest.json
+
+``
+{
+    "scopedRegistries": [
+        {
+            "name": "package.openupm.cn",
+            "url": "https://package.openupm.cn",
+            "scopes": [
+                "com.tendo.fuxi"
+            ]
+        }
+    ],
+    "dependencies": {
+        "com.tendo.fuxi": "1.0.6"
+    }
+}
+``
+
 # 从 0 开始使用
 
 ### 新增配置, 配置参数说明
