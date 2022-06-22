@@ -18,7 +18,7 @@ namespace FuXi.Editor
         public string BundleRootPath = "Assets/BundleResource/";
         public string ExtensionName;
         public BuildPlateForm FxPlatform;
-        public string EncryptType;
+        public string EncryptType = "None";
         public bool CopyAllBundle2Player;
         public List<string> ExcludeExtensions;
         public List<Fx_BuildPackage> BuiltinPackages;
