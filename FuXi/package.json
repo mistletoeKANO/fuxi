@@ -1,10 +1,9 @@
-{
+﻿{
   "name": "com.tendo.fuxi",
   "displayName": "FuXi",
-  "description": "assetBundle build and load solution!",
+  "description": "简单高效的资源热更新解决方案!",
   "version": "1.0.7",
   "unity": "2019.4",
   "license": "MIT",
-  "dependencies": {
-  }
+  "dependencies": {}
 }
