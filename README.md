@@ -36,11 +36,12 @@ AssetBundle 资源管理 和 加载 插件
 ## 资源引用动态分析工具 截图
 
 1. Bundle引用分析截图
+
 ![Bundle引用分析](https://user-images.githubusercontent.com/33541704/175015909-124be746-de0c-4da0-9ba9-a9f1dcb6f0e5.png)
 
 2. Asset引用分析截图
-![Asset引用分析](https://user-images.githubusercontent.com/33541704/175016039-cfa83c2a-4e2f-4b4f-aaf3-64121d0e31be.png)
 
+![Asset引用分析](https://user-images.githubusercontent.com/33541704/175016039-cfa83c2a-4e2f-4b4f-aaf3-64121d0e31be.png)
 
 ## 注意事项
 
