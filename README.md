@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/github/license/mistletoeKANO/fuxi)]([https://github.com/mistletoeKANO/fuxi/blob/master/LICENSE](https://github.com/mistletoeKANO/fuxi/blob/main/LICENSE))[![openupm](https://img.shields.io/npm/v/com.tendo.fuxi?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.cn/packages/com.tendo.fuxi/)
 
-AssetBundle 资源管理 和 加载 插件
+### **版本资源 管理 工具**
 
 ## 功能 
 1.操作简单易上手, 单配置文件, 可添加多个配置 管理不同平台, 方便管理
