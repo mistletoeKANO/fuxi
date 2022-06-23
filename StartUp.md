@@ -14,7 +14,7 @@
 
 ### 或者 拷贝以下内容 到 Packages/manifest.json
 
-``
+````
 {
     "scopedRegistries": [
         {
@@ -29,7 +29,7 @@
         "com.tendo.fuxi": "1.0.7"
     }
 }
-``
+````
 
 # 从 0 开始使用
 
