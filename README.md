@@ -49,7 +49,7 @@
 
 ## 其它
 
-说明: [StartUp](https://github.com/mistletoeKANO/fuxi/blob/main/StartUp.md)
+快速开始: [StartUp](https://github.com/mistletoeKANO/fuxi/blob/main/StartUp.md)
 
 示例工程: [FuXi_Example](https://github.com/mistletoeKANO/fuxi-example)
 
