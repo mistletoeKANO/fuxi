@@ -241,6 +241,19 @@ namespace FuXi.Editor
             }
             return "Platform Not Support";
         }
+
+        /// <summary>
+        /// 构建好的 Bundle 路径
+        /// </summary>
+        /// <param name="plateForm"></param>
+        /// <returns></returns>
+        internal static string BundleCachePlatformPath(BuildPlateForm plateForm)
+        {
+            var path = $"{FxBuildPath.ProjectRootPath()}/{FxPathHelper.BundlePathName}/{BuildPlateFormName(plateForm)}";
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
+        }
         
         /// <summary>
         /// 清除所有AB

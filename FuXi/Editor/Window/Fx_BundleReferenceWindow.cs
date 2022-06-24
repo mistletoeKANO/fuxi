@@ -24,7 +24,7 @@ namespace FuXi.Editor
             this.InitGUIData();
             this.DrawGUI();
         }
-        private void InitWindow() { this.titleContent = Fx_Style.Title; }
+        private void InitWindow() { this.titleContent = Fx_Style.RefWindowTitle; }
 
         private void InitGUIData()
         {

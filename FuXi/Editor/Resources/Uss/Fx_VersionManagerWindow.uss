@@ -1,0 +1,52 @@
+.vm-toolbar{
+    min-height: 21px;
+    max-height: 21px;
+    border-top-width: 1px;
+}
+.vm-toolbar > Label{
+    width: 40px;
+    -unity-text-align: middle-right;
+}
+
+.vm-toolbar-drop-menu{
+    margin: 0;
+    min-width: 120px;
+}
+
+.vm-main-view{
+    flex-grow: 1;
+}
+
+.vm-main-view-bg{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-image: resource("GameViewBackground");
+    -unity-slice-bottom: 10;
+    -unity-slice-top: 20;
+    -unity-slice-left: 20;
+    -unity-slice-right: 20;
+}
+
+.vm-main-view-info{
+    min-width: 160px;
+}
+
+.vm-main-view-bundle-list{
+    min-width: 240px;
+}
+
+.unity-two-pane-split-view__dragline-anchor{
+    background-color: rgba(0,0,0,0.4);
+}
+
+.vm-footer{
+    padding-left: 3px;
+    min-height: 20px;
+    max-height: 20px;
+    border-top-width: 1px;
+    border-color: rgba(1, 1, 1, 0.4);
+    -unity-text-align: middle-left;
+}

@@ -52,24 +52,28 @@ namespace FuXi.Editor
             EditorExtension.ClearConsole();
             try
             {
-                this.BuildBundlePreProcess();         // 构建前预处理
-                this.AnalysisMainAssets();            // 分析主要资产
-                this.AnalysisDependenciesAssets();    // 分析依赖资产
-                this.AnalysisPackage();               // 分析分包资产
-                this.BuildBundles();                  // 构建AssetBundle包
-                this.AnalysisManifest();              // 分析清单文件
-                this.EncryptBundles();                // 加密AssetBundle包
-                this.AnalysisPackageDependencies();   // 分析分包依赖Bundle包
-                this.WriteManifest();                 // 生成版本文件
-                this.CopyVersionFile();               // 拷贝版本差异文件
+                this.BuildBundlePreProcess(); // 构建前预处理
+                this.AnalysisMainAssets(); // 分析主要资产
+                this.AnalysisDependenciesAssets(); // 分析依赖资产
+                this.AnalysisPackage(); // 分析分包资产
+                this.BuildBundles(); // 构建AssetBundle包
+                this.AnalysisManifest(); // 分析清单文件
+                this.EncryptBundles(); // 加密AssetBundle包
+                this.AnalysisPackageDependencies(); // 分析分包依赖Bundle包
+                this.WriteManifest(); // 生成版本文件
+                this.CopyVersionFile(); // 拷贝版本差异文件
                 this.RemoveUnityManifest();
-                this.EndBuild();                      // End
-                this.BuildBundlePostProcess();        // 构建后处理
+                this.EndBuild(); // End
+                this.BuildBundlePostProcess(); // 构建后处理
             }
             catch (Exception e)
             {
                 Debug.LogError("Build failure!");
                 throw new BuildFailedException(e);
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
             }
             if (this.buildAsset != null) Selection.activeObject = this.buildAsset;
         }

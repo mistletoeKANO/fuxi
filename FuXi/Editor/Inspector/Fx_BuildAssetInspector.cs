@@ -86,6 +86,8 @@ namespace FuXi.Editor
             genericMenu.AddItem(new GUIContent("D 清除下载缓存"), false, this.DeleteDownloadCache);
             genericMenu.AddItem(new GUIContent("D 清除AB包"), false, this.DeleteAssetBundle);
             genericMenu.AddItem(new GUIContent("D 清除安装包"), false, this.DeletePlayer);
+            genericMenu.AddSeparator("");
+            genericMenu.AddItem(new GUIContent("V 配置版本管理"), false, this.OpenVerWindow);
             genericMenu.ShowAsContext();
         }
 
@@ -114,6 +116,21 @@ namespace FuXi.Editor
                 Fx_BuildSetting setting = AssetDatabase.LoadAssetAtPath<Fx_BuildSetting>(AssetDatabase.GetAssetPath(target));
                 FxBuildCache.DeletePlayer(setting.FxPlatform);
             }
+        }
+
+        private void OpenVerWindow()
+        {
+            Fx_VersionManagerWindow[] windows = Resources.FindObjectsOfTypeAll<Fx_VersionManagerWindow>() ;
+            var window = windows.Length != 0 ? windows[0] : default;
+            if (window != default)
+            {
+                window.OpenWindow((Fx_BuildAsset) this.target);
+                window.Focus();
+                return;
+            }
+            window = CreateInstance<Fx_VersionManagerWindow>();
+            window.OpenWindow((Fx_BuildAsset) this.target);
+            window.Show();
         }
 
         public override bool UseDefaultMargins() { return false; }

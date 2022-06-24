@@ -41,6 +41,10 @@ namespace FuXi.Editor
             {
                 Debug.LogError($"build player failure with error: {e.Message}");
             }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
             Debug.Log("build player succeed!");
             if (this.buildAsset != null) Selection.activeObject = this.buildAsset;
         }
@@ -59,6 +63,10 @@ namespace FuXi.Editor
             catch (Exception e)
             {
                 Debug.LogError($"copy bundle failure with error: {e.Message}");
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
             }
             Debug.Log("copy bundle finished!");
         }
