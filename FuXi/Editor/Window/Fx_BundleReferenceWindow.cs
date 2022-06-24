@@ -208,11 +208,14 @@ namespace FuXi.Editor
                     GUILayout.Label(bundle.BundleHashName, Fx_Style.FooterLabelInfo);
                     totalSize += bundle.Size;
                 }
-                foreach (var id in this.m_FxAsset.manifest.DependBundles)
+                if (this.m_FxAsset.manifest.DependBundles != null)
                 {
-                    if (!FxManager.ManifestVC.TryGetBundleManifest(id, out bundle)) continue;
-                    GUILayout.Label(bundle.BundleHashName, Fx_Style.FooterLabelInfo);
-                    totalSize += bundle.Size;
+                    foreach (var id in this.m_FxAsset.manifest.DependBundles)
+                    {
+                        if (!FxManager.ManifestVC.TryGetBundleManifest(id, out bundle)) continue;
+                        GUILayout.Label(bundle.BundleHashName, Fx_Style.FooterLabelInfo);
+                        totalSize += bundle.Size;
+                    }
                 }
                 GUILayout.Label($"资源依赖Bundle大小: {FxUtility.FormatBytes(totalSize)}", Fx_Style.FooterLabelInfo);
             }

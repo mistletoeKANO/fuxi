@@ -84,6 +84,7 @@ namespace FuXi
         internal bool TryGetBundleManifest(int index, out BundleManifest manifest)
         {
             manifest = default;
+            if (this.NewManifest.Bundles == null) return false;
             if (index >= this.NewManifest.Bundles.Length || index < 0)
             {
                 FxDebug.ColorError(FxDebug.ColorStyle.Red, "Load bundle index {0} is out of range!", index);

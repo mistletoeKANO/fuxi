@@ -85,7 +85,6 @@ namespace FuXi.Editor
         internal void OnGUI()
         {
             if (!this.m_IsDrawHeader) return;
-            
             var assetDic = FuXi.FxAsset.AssetCache;
             Rect posRect = GUILayoutUtility.GetRect(0, float.MaxValue, 0, float.MaxValue);
             Rect viewRect = new Rect(this.m_LastRect)
@@ -133,9 +132,9 @@ namespace FuXi.Editor
                     Rect cRect = this.m_MultiColumnHeader.GetColumnRect(visibleColumnIndex);
                     cRect.y = rowRect.y + mMaxHeight;
                     if (FxManager.ManifestVC.TryGetBundleManifest(asset.Value.manifest.HoldBundle, out var bundle))
-                    {
                         GUI.Label(cRect, bundle.BundleHashName);
-                    }
+                    else
+                        GUI.Label(cRect, "-1");
                 }
                 columnIndex++;
                 if (this.m_MultiColumnHeader.IsColumnVisible(columnIndex))

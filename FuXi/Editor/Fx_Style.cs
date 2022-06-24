@@ -65,7 +65,7 @@ namespace FuXi.Editor
 
         static Fx_Style()
         {
-            Space = new GUIStyle("ProfilerRightPane")
+            Space = new GUIStyle("CN Box")
             {
                 stretchHeight = false,
             };

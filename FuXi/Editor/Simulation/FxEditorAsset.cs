@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEditor;
+using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 namespace FuXi.Editor
@@ -14,6 +15,7 @@ namespace FuXi.Editor
         internal override Task<FxAsyncTask> Execute()
         {
             base.Execute();
+            this.stackInfo = StackTraceUtility.ExtractStackTrace();
             if (FxManager.ManifestVC == null)
                 this.asset = AssetDatabase.LoadAssetAtPath(this.m_FilePath, this.m_Type);
             else
