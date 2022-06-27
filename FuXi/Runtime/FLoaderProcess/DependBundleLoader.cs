@@ -12,6 +12,7 @@ namespace FuXi
             LoadBundle,
         }
         internal bool isDone;
+        internal float progress;
         internal AssetBundle assetBundle;
         internal readonly FxReference fxReference;
         internal long size => this.m_BundleManifest.Size;
@@ -64,6 +65,7 @@ namespace FuXi
             switch (this.m_LoadStep)
             {
                 case LoadStep.DownLoad:
+                    this.progress = 0.3f * this.m_Downloader.progress;
                     if (!this.m_Downloader.isDone)
                     {
                         this.m_Downloader.Update();
@@ -75,6 +77,7 @@ namespace FuXi
                     this.m_LoadStep = LoadStep.LoadBundle;
                     break;
                 case LoadStep.LoadBundle:
+                    this.progress = 0.3f + this.m_BundleRequest.progress * 0.7f;
                     if (!this.m_BundleRequest.isDone) return;
                     FxDebug.ColorLog(FxDebug.ColorStyle.Cyan, "LoadBundle {0}", this.m_PathOrURL);
                     this.assetBundle = this.m_BundleRequest.assetBundle;

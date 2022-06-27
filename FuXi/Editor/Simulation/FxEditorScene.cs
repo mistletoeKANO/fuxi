@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
@@ -7,10 +8,10 @@ namespace FuXi.Editor
 {
     public class FxEditorScene : FxScene
     {
-        internal static FxEditorScene CreateEditorScene(string path, bool addition, bool immediate)
-        { return new FxEditorScene(path, addition, immediate); }
+        internal static FxEditorScene CreateEditorScene(string path, bool addition, bool immediate, Action<float> callback)
+        { return new FxEditorScene(path, addition, immediate, callback); }
         
-        FxEditorScene(string path, bool additive, bool immediate) : base(path, additive, immediate) { }
+        FxEditorScene(string path, bool additive, bool immediate, Action<float> callback) : base(path, additive, immediate, callback) { }
         internal override Task<FxAsyncTask> Execute()
         {
             base.Execute();

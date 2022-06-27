@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -20,16 +21,18 @@ namespace FuXi
         
         private readonly List<FxScene> m_SubScenes = new List<FxScene>();
         private readonly BundleLoader m_BundleLoader;
+        private readonly Action<float> m_LoadUpdate;
 
         private LoadSceneSteps m_LoadStep;
         private FxScene m_Parent;
 
-        internal FxScene(string path, bool additive, bool immediate)
+        internal FxScene(string path, bool additive, bool immediate, Action<float> callback)
         {
             this.m_ScenePath = path;
             this.m_LoadMode = additive ? LoadSceneMode.Additive : LoadSceneMode.Single;
             this.m_Immediate = immediate;
             this.m_BundleLoader = new BundleLoader();
+            this.m_LoadUpdate = callback;
         }
         
         internal override Task<FxAsyncTask> Execute()
@@ -61,6 +64,7 @@ namespace FuXi
             switch (this.m_LoadStep)
             {
                 case LoadSceneSteps.LoadBundle:
+                    this.m_LoadUpdate?.Invoke(0.5f * this.m_BundleLoader.progress);
                     if (!this.m_BundleLoader.isDone)
                     {
                         this.m_BundleLoader.Update();
@@ -73,6 +77,7 @@ namespace FuXi
                         this.m_LoadStep = LoadSceneSteps.LoadScene;
                     break;
                 case LoadSceneSteps.LoadScene:
+                    this.m_LoadUpdate?.Invoke(0.5f + 0.5f * this.m_Operation.progress);
                     if (this.m_Operation.allowSceneActivation)
                         if (!this.m_Operation.isDone) return;
                     else

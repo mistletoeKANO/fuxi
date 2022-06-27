@@ -11,10 +11,10 @@ namespace FuXi
         private static FxScene CurrentScene;
 
         private static readonly Queue<FxScene> UnUsed = new Queue<FxScene>();
-        internal static Func<string, bool, bool, FxScene> FxSceneCreate;
+        internal static Func<string, bool, bool, Action<float>, FxScene> FxSceneCreate;
 
-        internal static FxScene CreateScene(string path, bool addition, bool immediate)
-        { return new FxScene(path, addition, immediate); }
+        internal static FxScene CreateScene(string path, bool addition, bool immediate, Action<float> callback)
+        { return new FxScene(path, addition, immediate, callback); }
 
         protected static void RefreshRef(FxScene fxScene)
         {
@@ -51,7 +51,7 @@ namespace FuXi
         public static FxScene LoadScene(string path, bool additive = false)
         {
             if (CurrentScene != null && CurrentScene.m_ScenePath == path) return CurrentScene;
-            var res = FxSceneCreate.Invoke(path, additive, true).Execute();
+            var res = FxSceneCreate.Invoke(path, additive, true, null).Execute();
             var scene = (FxScene) res.Result;
             return scene;
         }
@@ -65,7 +65,7 @@ namespace FuXi
         public static FxScene LoadSync(string path, bool additive = false)
         {
             if (CurrentScene != null && CurrentScene.m_ScenePath == path) return CurrentScene;
-            var res = FxSceneCreate.Invoke(path, additive, false)
+            var res = FxSceneCreate.Invoke(path, additive, false, null)
                 .Execute()
                 .ConfigureAwait(false)
                 .GetAwaiter()
@@ -78,11 +78,12 @@ namespace FuXi
         /// </summary>
         /// <param name="path"></param>
         /// <param name="additive"></param>
+        /// <param name="callback"></param>
         /// <returns></returns>
-        public static async Task<FxScene> LoadSceneAsync(string path, bool additive = false)
+        public static async Task<FxScene> LoadSceneAsync(string path, bool additive = false, Action<float> callback = null)
         {
             if (CurrentScene != null && CurrentScene.m_ScenePath == path) return CurrentScene;
-            var res = await FxSceneCreate.Invoke(path, additive, false).Execute();
+            var res = await FxSceneCreate.Invoke(path, additive, false, callback).Execute();
             var scene = (FxScene) res;
             return scene;
         }
@@ -96,7 +97,7 @@ namespace FuXi
         public static FxScene LoadSceneCo(string path, bool additive = false)
         {
             if (CurrentScene != null && CurrentScene.m_ScenePath == path) return CurrentScene;
-            var scene = FxSceneCreate.Invoke(path, additive, false);
+            var scene = FxSceneCreate.Invoke(path, additive, false, null);
             scene.Execute();
             return scene;
         }
