@@ -18,10 +18,10 @@ namespace FuXi
         internal readonly LoadSceneMode m_LoadMode;
         internal readonly bool m_Immediate;
         internal AsyncOperation m_Operation;
+        internal readonly Action<float> m_LoadUpdate;
         
         private readonly List<FxScene> m_SubScenes = new List<FxScene>();
         private readonly BundleLoader m_BundleLoader;
-        private readonly Action<float> m_LoadUpdate;
 
         private LoadSceneSteps m_LoadStep;
         private FxScene m_Parent;
