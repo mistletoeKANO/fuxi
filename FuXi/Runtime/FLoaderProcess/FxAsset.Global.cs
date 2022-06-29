@@ -52,22 +52,6 @@ namespace FuXi
             res.Execute();
             return res;
         }
-        
-        /// <summary>
-        /// 异步转同步加载
-        /// </summary>
-        /// <param name="path"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static FxAsset LoadSync<T>(string path)
-        {
-            var res = ReferenceAsset(path, typeof(T), false, null)
-                .Execute()
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
-            return (FxAsset) res;
-        }
 
         /// <summary>
         /// 异步加载

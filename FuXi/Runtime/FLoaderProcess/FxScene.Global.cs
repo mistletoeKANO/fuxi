@@ -55,24 +55,7 @@ namespace FuXi
             var scene = (FxScene) res.Result;
             return scene;
         }
-        
-        /// <summary>
-        /// 异步转同步加载
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="additive"></param>
-        /// <returns></returns>
-        public static FxScene LoadSync(string path, bool additive = false)
-        {
-            if (CurrentScene != null && CurrentScene.m_ScenePath == path) return CurrentScene;
-            var res = FxSceneCreate.Invoke(path, additive, false, null)
-                .Execute()
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
-            return (FxScene) res;
-        }
-        
+
         /// <summary>
         /// 异步加载
         /// </summary>

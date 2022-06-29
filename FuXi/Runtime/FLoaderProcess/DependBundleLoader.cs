@@ -37,8 +37,9 @@ namespace FuXi
             {
                 if (immediate)
                 {
-                    this.m_Downloader = new Downloader(this.m_BundleManifest);
-                    this.m_Downloader.StartDownloadAwait().ConfigureAwait(false).GetAwaiter();
+                    FxDebug.ColorError(FxDebug.ColorStyle.Red, "Bundle {0} is not download, cant load immediate!",
+                        this.m_BundleManifest.BundleHashName);
+                    return;
                 }
                 else
                 {

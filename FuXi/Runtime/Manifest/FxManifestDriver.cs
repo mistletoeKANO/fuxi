@@ -190,8 +190,7 @@ namespace FuXi
             if (!this.OldManifest.Name2BundleManifest.TryGetValue(manifest.BundleHashName, out var oldManifest)) return default;
             if (oldManifest.IsBuiltin && oldManifest.Hash == manifest.Hash)
             {
-                path = FxPathHelper.StreamingLoadPath(manifest.BundleHashName);
-                return FxPathHelper.ConvertToWWWPath(path);
+                return FxPathHelper.StreamingLoadPath(manifest.BundleHashName);
             }
             return String.Empty;
         }

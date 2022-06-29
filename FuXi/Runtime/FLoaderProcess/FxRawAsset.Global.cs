@@ -49,22 +49,7 @@ namespace FuXi
                 rawAsset.Value.Dispose();
             RawAssetCache.Clear();
         }
-        
-        /// <summary>
-        /// 同步加载
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static FxRawAsset LoadSync(string path)
-        {
-            var res= ReferenceAsset(path)
-                .Execute()
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
-            return (FxRawAsset) res;
-        }
-        
+
         /// <summary>
         /// 异步加载
         /// </summary>
