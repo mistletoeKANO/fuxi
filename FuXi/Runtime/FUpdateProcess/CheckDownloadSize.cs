@@ -50,17 +50,17 @@ namespace FuXi
                 case CheckSteps.CheckNormal:
                     if (this.m_ContainsPackage)
                     {
-                        foreach (var m in FxManager.ManifestVC.NewManifest.Bundles)
+                        foreach (var m in FuXiManager.ManifestVC.NewManifest.Bundles)
                             this.m_BundleManifest.Enqueue(m);
                     }
                     else
                     {
-                        var packageBundles = FxManager.ManifestVC.GetPackagesBundle();
-                        int length = FxManager.ManifestVC.NewManifest.Bundles.Length;
+                        var packageBundles = FuXiManager.ManifestVC.GetPackagesBundle();
+                        int length = FuXiManager.ManifestVC.NewManifest.Bundles.Length;
                         for (int i = 0; i < length; i++)
                         {
                             if (packageBundles.Contains(i)) continue;
-                            this.m_BundleManifest.Enqueue(FxManager.ManifestVC.NewManifest.Bundles[i]);
+                            this.m_BundleManifest.Enqueue(FuXiManager.ManifestVC.NewManifest.Bundles[i]);
                         }
                     }
                     this.progress = 0.1f;
@@ -73,10 +73,10 @@ namespace FuXi
                         this.m_CheckStep = CheckSteps.Finished;
                         break;
                     }
-                    List<int> ids = FxManager.ManifestVC.GetPackagesBundle(this.m_Packages);
+                    List<int> ids = FuXiManager.ManifestVC.GetPackagesBundle(this.m_Packages);
                     foreach (var i in ids)
                     {
-                        this.m_BundleManifest.Enqueue(FxManager.ManifestVC.NewManifest.Bundles[i]);
+                        this.m_BundleManifest.Enqueue(FuXiManager.ManifestVC.NewManifest.Bundles[i]);
                     }
                     this.progress = 0.1f;
                     this.m_CheckUpdate?.Invoke(this.progress);
@@ -91,7 +91,7 @@ namespace FuXi
                     while (this.m_BundleManifest.Count > 0)
                     {
                         var bm = this.m_BundleManifest.Dequeue();
-                        var downloadState = FxManager.ManifestVC.Downloaded(bm.BundleHashName);
+                        var downloadState = FuXiManager.ManifestVC.Downloaded(bm.BundleHashName);
                         if (downloadState.Valid) continue;
 
                         this.DownloadInfo.DownloadSize += bm.Size - downloadState.Size;

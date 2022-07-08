@@ -38,8 +38,8 @@ namespace FuXi
         internal override Task<FxAsyncTask> Execute()
         {
             base.Execute();
-            if (FxManager.RuntimeMode == RuntimeMode.Editor) return null;
-            if (!FxManager.ManifestVC.TryGetAssetManifest(this.m_ScenePath, out var manifest))
+            if (FuXiManager.RuntimeMode == RuntimeMode.Editor) return null;
+            if (!FuXiManager.ManifestVC.TryGetAssetManifest(this.m_ScenePath, out var manifest))
             {
                 this.tcs.SetResult(this);
                 this.isDone = true;

@@ -42,11 +42,11 @@ namespace FuXi
         internal override Task<FxAsyncTask> Execute()
         {
             base.Execute();
-            if (FxManager.RuntimeMode == RuntimeMode.Editor) return null;
+            if (FuXiManager.RuntimeMode == RuntimeMode.Editor) return null;
 #if UNITY_EDITOR
             this.stackInfo = StackTraceUtility.ExtractStackTrace();
 #endif
-            if (!FxManager.ManifestVC.TryGetAssetManifest(this.m_FilePath, out this.manifest))
+            if (!FuXiManager.ManifestVC.TryGetAssetManifest(this.m_FilePath, out this.manifest))
             {
                 this.tcs.SetResult(this);
                 this.isDone = true;

@@ -33,7 +33,7 @@ namespace FuXi
 
         internal void Start(BundleManifest manifest)
         {
-            this.m_URL = $"{FxManager.PlatformURL}{manifest.BundleHashName}";
+            this.m_URL = $"{FuXiManager.PlatformURL}{manifest.BundleHashName}";
             this.m_SavePath = FxPathHelper.PersistentLoadPath(manifest.BundleHashName);
 
             this.m_Crc = manifest.CRC;

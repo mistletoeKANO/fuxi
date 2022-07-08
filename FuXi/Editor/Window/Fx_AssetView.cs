@@ -131,7 +131,7 @@ namespace FuXi.Editor
                     int visibleColumnIndex = this.m_MultiColumnHeader.GetVisibleColumnIndex(columnIndex);
                     Rect cRect = this.m_MultiColumnHeader.GetColumnRect(visibleColumnIndex);
                     cRect.y = rowRect.y + mMaxHeight;
-                    if (FxManager.ManifestVC.TryGetBundleManifest(asset.Value.manifest.HoldBundle, out var bundle))
+                    if (FuXiManager.ManifestVC.TryGetBundleManifest(asset.Value.manifest.HoldBundle, out var bundle))
                         GUI.Label(cRect, bundle.BundleHashName);
                     else
                         GUI.Label(cRect, "-1");

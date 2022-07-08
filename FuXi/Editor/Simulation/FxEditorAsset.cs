@@ -16,11 +16,11 @@ namespace FuXi.Editor
         {
             base.Execute();
             this.stackInfo = StackTraceUtility.ExtractStackTrace();
-            if (FxManager.ManifestVC == null)
+            if (FuXiManager.ManifestVC == null)
                 this.asset = AssetDatabase.LoadAssetAtPath(this.m_FilePath, this.m_Type);
             else
             {
-                if (FxManager.ManifestVC.TryGetAssetManifest(this.m_FilePath, out var _))
+                if (FuXiManager.ManifestVC.TryGetAssetManifest(this.m_FilePath, out var _))
                     this.asset = AssetDatabase.LoadAssetAtPath(this.m_FilePath, this.m_Type);
             }
             manifest = new AssetManifest() {Path = this.m_FilePath, HoldBundle = -1};

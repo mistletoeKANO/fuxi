@@ -15,7 +15,7 @@ namespace FuXi.Editor
         internal override Task<FxAsyncTask> Execute()
         {
             base.Execute();
-            if (null != FxManager.ManifestVC && !FxManager.ManifestVC.TryGetAssetManifest(this.m_ScenePath, out _))
+            if (null != FuXiManager.ManifestVC && !FuXiManager.ManifestVC.TryGetAssetManifest(this.m_ScenePath, out _))
             {
                 this.tcs.SetResult(this);
                 this.isDone = true;

@@ -18,7 +18,7 @@ namespace FuXi
                 return;
             }
             this.m_LoaderList = new List<DependBundleLoader>();
-            if (FxManager.ManifestVC.TryGetBundleManifest(manifest.HoldBundle, out var bundleManifest))
+            if (FuXiManager.ManifestVC.TryGetBundleManifest(manifest.HoldBundle, out var bundleManifest))
             {
                 if (!DependBundleLoader.TryReferenceBundle(bundleManifest, out this.mainLoader))
                     this.mainLoader.StartLoad(immediate);
@@ -28,7 +28,7 @@ namespace FuXi
             {
                 foreach (var index in manifest.DependBundles)
                 {
-                    if (!FxManager.ManifestVC.TryGetBundleManifest(index, out bundleManifest)) continue;
+                    if (!FuXiManager.ManifestVC.TryGetBundleManifest(index, out bundleManifest)) continue;
                     if (!DependBundleLoader.TryReferenceBundle(bundleManifest, out var bundleLoader))
                         bundleLoader.StartLoad(immediate);
                     this.m_LoaderList.Add(bundleLoader);

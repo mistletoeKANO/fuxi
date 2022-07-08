@@ -65,9 +65,10 @@ namespace FuXi.Editor
 
         static Fx_Style()
         {
-            Space = new GUIStyle("CN Box")
+            Space = new GUIStyle()
             {
                 stretchHeight = false,
+                normal = new GUIStyleState(){background = Resources.Load<Texture2D>("Images/Label_Bottom_Line")}
             };
             LabelTitleCyan = new GUIStyle
             {

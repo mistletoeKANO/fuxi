@@ -36,15 +36,15 @@ namespace FuXi
         public CheckWWWManifest(System.Action<float> updateProgress)
         {
             this.m_UpdateProgress = updateProgress;
-            this.m_LocalVersion = FxPathHelper.PersistentLoadPath(FxManager.ManifestVC.VersionName);
+            this.m_LocalVersion = FxPathHelper.PersistentLoadPath(FuXiManager.ManifestVC.VersionName);
             if (!System.IO.File.Exists(this.m_LocalVersion))
             {
-                this.m_LocalVersion = FxPathHelper.StreamingLoadPath(FxManager.ManifestVC.VersionName);
+                this.m_LocalVersion = FxPathHelper.StreamingLoadPath(FuXiManager.ManifestVC.VersionName);
                 this.m_LocalVersion = FxPathHelper.ConvertToWWWPath(this.m_LocalVersion);
             }else
                 this.m_LocalVersion = FxPathHelper.PersistentLoadURL(this.m_LocalVersion);
-            this.m_ServerVersion = $"{FxManager.PlatformURL}{FxManager.ManifestVC.VersionName}";
-            this.m_ServerManifest = $"{FxManager.PlatformURL}{FxManager.ManifestVC.ManifestName}";
+            this.m_ServerVersion = $"{FuXiManager.PlatformURL}{FuXiManager.ManifestVC.VersionName}";
+            this.m_ServerManifest = $"{FuXiManager.PlatformURL}{FuXiManager.ManifestVC.ManifestName}";
         }
 
         internal override Task<FxAsyncTask> Execute()
@@ -105,7 +105,7 @@ namespace FuXi
                     break;
                 case CheckVersionSteps.DownloadServerVersion:
                     this.m_ServerVer = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);
-                    FxManager.ManifestVC.NewHash = this.m_ServerVer;
+                    FuXiManager.ManifestVC.NewHash = this.m_ServerVer;
                     FxDebug.Log($"Server Version Hash:{this.m_ServerVer}");
                     this.m_CurStep = CheckVersionSteps.CheckServerVersion;
                     this.m_StepNum++;
@@ -125,7 +125,7 @@ namespace FuXi
                     break;
                 case CheckVersionSteps.DownloadServerManifest:
                     var readValue = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);
-                    FxManager.ManifestVC.NewManifest = FxManifest.Parse(readValue);
+                    FuXiManager.ManifestVC.NewManifest = FxManifest.Parse(readValue);
                     FxDebug.Log($"Download Server Manifest: {this.m_ServerManifest}");
                     this.progress = 1;
                     this.isDone = true;

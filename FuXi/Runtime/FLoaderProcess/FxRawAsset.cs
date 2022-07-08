@@ -28,15 +28,15 @@ namespace FuXi
         internal override Task<FxAsyncTask> Execute()
         {
             base.Execute();
-            if (FxManager.RuntimeMode == RuntimeMode.Editor) return null;
-            if (!FxManager.ManifestVC.TryGetAssetManifest(this.m_PathOrURL, out var manifest))
+            if (FuXiManager.RuntimeMode == RuntimeMode.Editor) return null;
+            if (!FuXiManager.ManifestVC.TryGetAssetManifest(this.m_PathOrURL, out var manifest))
             {
                 this.tcs.SetResult(this);
                 this.isDone = true;
                 return this.tcs.Task;
             }
-            FxManager.ManifestVC.TryGetBundleManifest(manifest.HoldBundle, out this.m_BundleManifest);
-            this.m_PathOrURL = FxManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest);
+            FuXiManager.ManifestVC.TryGetBundleManifest(manifest.HoldBundle, out this.m_BundleManifest);
+            this.m_PathOrURL = FuXiManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest);
             if (string.IsNullOrEmpty(this.m_PathOrURL))
             {
                 this.m_Downloader = new Downloader(this.m_BundleManifest);
@@ -71,18 +71,18 @@ namespace FuXi
                         FxDebug.ColorWarning(FxDebug.ColorStyle.Orange, "FxRawAsset read file {0} bytes failure", this.m_PathOrURL);
                         return;
                     }
-                    if (FxManager.ManifestVC.GameEncrypt != null && FxManager.ManifestVC.GameEncrypt.IsEncrypted(this.Data))
+                    if (FuXiManager.ManifestVC.GameEncrypt != null && FuXiManager.ManifestVC.GameEncrypt.IsEncrypted(this.Data))
                     {
-                        if (FxManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.OFFSET)
+                        if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.OFFSET)
                         {
-                            var header = FxManager.ManifestVC.GameEncrypt.EncryptOffset();
+                            var header = FuXiManager.ManifestVC.GameEncrypt.EncryptOffset();
                             int newSize = this.Data.Length - header.Length;
                             System.Array.Copy(this.Data, header.Length, this.Data, 0, newSize);
                             System.Array.Resize(ref this.Data, newSize);
                         }
-                        else if (FxManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.XOR)
+                        else if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.XOR)
                         {
-                            this.Data = FxManager.ManifestVC.GameEncrypt.DeEncrypt(this.Data);
+                            this.Data = FuXiManager.ManifestVC.GameEncrypt.DeEncrypt(this.Data);
                         }
                     }
                     
@@ -94,7 +94,7 @@ namespace FuXi
 
         private void LoadInternal()
         {
-            this.m_PathOrURL = FxManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest);
+            this.m_PathOrURL = FuXiManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest);
             this.m_WebRequest = UnityWebRequest.Get(this.m_PathOrURL);
             this.m_AsyncOperation = this.m_WebRequest.SendWebRequest();
             this.m_LoadStep = LoadStep.LoadFile;

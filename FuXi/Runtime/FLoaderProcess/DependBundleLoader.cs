@@ -32,7 +32,7 @@ namespace FuXi
         internal void StartLoad(bool immediate = false)
         {
             this.isDone = false;
-            this.m_PathOrURL = FxManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest);
+            this.m_PathOrURL = FuXiManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest);
             if (string.IsNullOrEmpty(this.m_PathOrURL))
             {
                 if (immediate)
@@ -73,7 +73,7 @@ namespace FuXi
                         return;
                     }
                     this.m_Downloader.Dispose();
-                    this.m_PathOrURL = FxManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest);
+                    this.m_PathOrURL = FuXiManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest);
                     this.LoadBundleAsyncInternal();
                     this.m_LoadStep = LoadStep.LoadBundle;
                     break;
@@ -89,19 +89,19 @@ namespace FuXi
 
         private void LoadBundleInternal()
         {
-            if (FxManager.ManifestVC.GameEncrypt != null)
+            if (FuXiManager.ManifestVC.GameEncrypt != null)
             {
-                if (FxManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.OFFSET)
+                if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.OFFSET)
                 {
-                    ulong offset = (ulong) FxManager.ManifestVC.GameEncrypt.EncryptOffset().Length;
+                    ulong offset = (ulong) FuXiManager.ManifestVC.GameEncrypt.EncryptOffset().Length;
                     this.assetBundle = AssetBundle.LoadFromFile(this.m_PathOrURL, 0, offset);
-                }else if (FxManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.XOR)
+                }else if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.XOR)
                 {
                     using (FileStream fileStream = new FileStream(this.m_PathOrURL, FileMode.Open, FileAccess.Read))
                     {
                         byte[] buffer = new byte[fileStream.Length];
                         fileStream.Read(buffer, 0, buffer.Length);
-                        buffer = FxManager.ManifestVC.GameEncrypt.DeEncrypt(buffer);
+                        buffer = FuXiManager.ManifestVC.GameEncrypt.DeEncrypt(buffer);
                         this.assetBundle = AssetBundle.LoadFromMemory(buffer, 0);
                     }
                 }
@@ -112,19 +112,19 @@ namespace FuXi
 
         private void LoadBundleAsyncInternal()
         {
-            if (FxManager.ManifestVC.GameEncrypt != null)
+            if (FuXiManager.ManifestVC.GameEncrypt != null)
             {
-                if (FxManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.OFFSET)
+                if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.OFFSET)
                 {
-                    ulong offset = (ulong) FxManager.ManifestVC.GameEncrypt.EncryptOffset().Length;
+                    ulong offset = (ulong) FuXiManager.ManifestVC.GameEncrypt.EncryptOffset().Length;
                     this.m_BundleRequest = AssetBundle.LoadFromFileAsync(this.m_PathOrURL, 0, offset);
-                }else if (FxManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.XOR)
+                }else if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.XOR)
                 {
                     using (FileStream fileStream = new FileStream(this.m_PathOrURL, FileMode.Open, FileAccess.Read))
                     {
                         byte[] buffer = new byte[fileStream.Length];
                         fileStream.Read(buffer, 0, buffer.Length);
-                        buffer = FxManager.ManifestVC.GameEncrypt.DeEncrypt(buffer);
+                        buffer = FuXiManager.ManifestVC.GameEncrypt.DeEncrypt(buffer);
                         this.m_BundleRequest = AssetBundle.LoadFromMemoryAsync(buffer, 0);
                     }
                 }

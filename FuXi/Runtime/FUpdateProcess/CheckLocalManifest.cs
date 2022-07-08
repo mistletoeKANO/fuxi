@@ -33,10 +33,10 @@ namespace FuXi
             switch (this.m_Step)
             {
                 case CheckLocalMStep.CheckFile:
-                    var manifestPath = FxPathHelper.PersistentLoadPath(FxManager.ManifestVC.ManifestName);
+                    var manifestPath = FxPathHelper.PersistentLoadPath(FuXiManager.ManifestVC.ManifestName);
                     if (!System.IO.File.Exists(manifestPath))
                     {
-                        manifestPath = FxPathHelper.StreamingLoadPath(FxManager.ManifestVC.ManifestName);
+                        manifestPath = FxPathHelper.StreamingLoadPath(FuXiManager.ManifestVC.ManifestName);
                         manifestPath = FxPathHelper.ConvertToWWWPath(manifestPath);
                     }else
                         manifestPath = FxPathHelper.PersistentLoadURL(manifestPath);
@@ -57,16 +57,16 @@ namespace FuXi
                     {
                         FxDebug.Log($"Load local manifest file: {this.m_UrlOrPath}");
                         var readValue = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);
-                        FxManager.ManifestVC.OldManifest = FxManifest.Parse(readValue);
-                        FxManager.ManifestVC.NewManifest = FxManager.ManifestVC.OldManifest;
+                        FuXiManager.ManifestVC.OldManifest = FxManifest.Parse(readValue);
+                        FuXiManager.ManifestVC.NewManifest = FuXiManager.ManifestVC.OldManifest;
                     }
                     else
                     {
                         FxDebug.LogError($"Load local manifest file failure with error: {this.m_UnityWebRequest.error}!");
-                        FxManager.ManifestVC.OldManifest = new FxManifest();
-                        FxManager.ManifestVC.NewManifest = new FxManifest();
+                        FuXiManager.ManifestVC.OldManifest = new FxManifest();
+                        FuXiManager.ManifestVC.NewManifest = new FxManifest();
                     }
-                    FxManager.ManifestVC.InitEncrypt();
+                    FuXiManager.ManifestVC.InitEncrypt();
                     tcs.SetResult(this);
                     this.isDone = true;
                     break;

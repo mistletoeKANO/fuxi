@@ -12,7 +12,7 @@ namespace FuXi
             Finished,
         }
         
-        private readonly Action<float> m_CheckDownload;
+        private readonly Action<CheckDownloadBundle> m_CheckDownload;
         private readonly Queue<BundleManifest> m_BundleList;
         private List<Downloader> m_Downloading;
         private List<Downloader> m_DownloadFinished;
@@ -26,10 +26,14 @@ namespace FuXi
         private readonly long m_DownloadSize;
         private long m_CurDownloadSize;
         
+        public int DownloadCount => this.m_BundleList.Count;
+        public int DownloadedCount => this.m_DownloadFinished.Count;
+        public long DownloadSize => this.m_DownloadSize;
+        public long DownloadedSize => this.m_CurDownloadSize;
         public string FormatDownloadSize => FxUtility.FormatBytes(this.m_DownloadSize);
         public string FormatCurDownloadSize => FxUtility.FormatBytes(this.m_CurDownloadSize);
-
-        internal CheckDownloadBundle(DownloadInfo downloadInfo, Action<float> checkDownload)
+        
+        internal CheckDownloadBundle(DownloadInfo downloadInfo, Action<CheckDownloadBundle> checkDownload)
         {
             this.m_BundleList = downloadInfo.DownloadList;
             this.m_DownloadSize = downloadInfo.DownloadSize;
@@ -84,10 +88,10 @@ namespace FuXi
                         this.m_DownloadStep = CheckDownloadStep.Finished;
                     }
                     this.progress = (float) this.m_CurDownloadSize / (float) this.m_DownloadSize;
-                    this.m_CheckDownload?.Invoke(this.progress);
+                    this.m_CheckDownload?.Invoke(this);
                     break;
                 case CheckDownloadStep.Finished:
-                    FxManager.ManifestVC.OverrideManifest();
+                    FuXiManager.ManifestVC.OverrideManifest();
                     this.isDone = true;
                     this.tcs.SetResult(this);
                     break;

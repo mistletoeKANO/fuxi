@@ -12,7 +12,7 @@ namespace FuXi.Editor
             FxScene.FxSceneCreate = FxEditorScene.CreateEditorScene;
             FxAsset.FxAssetCreate = FxEditorAsset.CreateEditorAsset;
             FxRawAsset.FxRawAssetCreate = FxEditorRawAsset.CreateEditorRawAsset;
-            FxManager.ParseManifestCallback = CreateManifest;
+            FuXiManager.ParseManifestCallback = CreateManifest;
         }
 
         private static FxManifest CreateManifest()

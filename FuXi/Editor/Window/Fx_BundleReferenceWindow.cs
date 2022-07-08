@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -77,6 +78,7 @@ namespace FuXi.Editor
             background.AddToClassList(Fx_Style.CName_BF_MainView_BG);
             this.m_MainView.Add(background);
 
+            MultiColumnHeader.DefaultStyles.background = GUIStyle.none;
             var header = new IMGUIContainer(this.OnDrawHeader);
             header.AddToClassList(Fx_Style.CName_BF_MainView_Header);
             this.m_MainView.Add(header);
@@ -203,7 +205,7 @@ namespace FuXi.Editor
             if (this.m_FBundleFlag)
             {
                 long totalSize = 0;
-                if (FxManager.ManifestVC.TryGetBundleManifest(this.m_FxAsset.manifest.HoldBundle, out var bundle))
+                if (FuXiManager.ManifestVC.TryGetBundleManifest(this.m_FxAsset.manifest.HoldBundle, out var bundle))
                 {
                     GUILayout.Label(bundle.BundleHashName, Fx_Style.FooterLabelInfo);
                     totalSize += bundle.Size;
@@ -212,7 +214,7 @@ namespace FuXi.Editor
                 {
                     foreach (var id in this.m_FxAsset.manifest.DependBundles)
                     {
-                        if (!FxManager.ManifestVC.TryGetBundleManifest(id, out bundle)) continue;
+                        if (!FuXiManager.ManifestVC.TryGetBundleManifest(id, out bundle)) continue;
                         GUILayout.Label(bundle.BundleHashName, Fx_Style.FooterLabelInfo);
                         totalSize += bundle.Size;
                     }
