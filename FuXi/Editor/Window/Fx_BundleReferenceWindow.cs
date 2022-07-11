@@ -77,8 +77,7 @@ namespace FuXi.Editor
             var background = new Image();
             background.AddToClassList(Fx_Style.CName_BF_MainView_BG);
             this.m_MainView.Add(background);
-
-            MultiColumnHeader.DefaultStyles.background = GUIStyle.none;
+            
             var header = new IMGUIContainer(this.OnDrawHeader);
             header.AddToClassList(Fx_Style.CName_BF_MainView_Header);
             this.m_MainView.Add(header);
@@ -91,6 +90,7 @@ namespace FuXi.Editor
         private void OnDrawHeader()
         {
             if (this.m_BundleView == null || this.m_AssetView == null) this.InitGUIData();
+            MultiColumnHeader.DefaultStyles.background = GUIStyle.none;
             GUILayout.Space(0);
             var windowRect = GUILayoutUtility.GetLastRect();
             windowRect.width = this.position.width;
