@@ -12,7 +12,7 @@ namespace FuXi.Editor
         { return new FxEditorAsset(path, type, immediate, callback); }
         
         FxEditorAsset(string path, Type type, bool loadImmediate, Action<FxAsset> callback) : base(path, type, loadImmediate, callback) { }
-        internal override Task<FxAsyncTask> Execute()
+        internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
             this.stackInfo = StackTraceUtility.ExtractStackTrace();
@@ -26,7 +26,7 @@ namespace FuXi.Editor
             manifest = new AssetManifest() {Path = this.m_FilePath, HoldBundle = -1};
             this.tcs.SetResult(this);
             this.isDone = true;
-            return this.tcs.Task;
+            return this.tcs;
         }
     }
 }

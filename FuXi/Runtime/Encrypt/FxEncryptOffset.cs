@@ -4,7 +4,7 @@ namespace FuXi
     /// <summary>
     /// 伏羲内置加密, 文件头偏移加密
     /// </summary>
-    public class FxEncryptOffset : IEncrypt
+    public class FxEncryptOffset : BaseEncrypt
     {
         protected override string EncryptHeader => "FxEncryptOffset";
         /// <summary>

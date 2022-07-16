@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
 namespace FuXi
@@ -52,7 +51,7 @@ namespace FuXi
         {
             if (CurrentScene != null && CurrentScene.m_ScenePath == path) return CurrentScene;
             var res = FxSceneCreate.Invoke(path, additive, true, null).Execute();
-            var scene = (FxScene) res.Result;
+            var scene = (FxScene) res.GetResult();
             return scene;
         }
 
@@ -63,7 +62,7 @@ namespace FuXi
         /// <param name="additive"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public static async Task<FxScene> LoadSceneAsync(string path, bool additive = false, Action<float> callback = null)
+        public static async FTask<FxScene> LoadSceneAsync(string path, bool additive = false, Action<float> callback = null)
         {
             if (CurrentScene != null && CurrentScene.m_ScenePath == path) return CurrentScene;
             var res = await FxSceneCreate.Invoke(path, additive, false, callback).Execute();

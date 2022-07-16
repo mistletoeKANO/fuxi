@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 namespace FuXi
@@ -10,11 +9,16 @@ namespace FuXi
     /// </summary>
     public static class FuXiManager
     {
-        public   static RuntimeMode RuntimeMode = RuntimeMode.Editor;
-        
+        /// <summary>
+        /// 版本管理器
+        /// </summary>
         internal static FxManifestDriver ManifestVC;
-        internal static System.Func<FxManifest> ParseManifestCallback;  // 用在Unity编辑器下初始化本地配置
+        internal static Func<FxManifest> ParseManifestCallback;  // 用在Unity编辑器下初始化本地配置
         internal static string PlatformURL;
+        /// <summary>
+        /// 运行模式
+        /// </summary>
+        public static RuntimeMode RuntimeMode = RuntimeMode.Editor;
         
         /// <summary>
         /// FuXi启动器
@@ -23,23 +27,30 @@ namespace FuXi
         /// <param name="url">资源服务器地址</param>
         /// <param name="runtimeMode">运行模式</param>
         /// <returns></returns>
-        public static async Task FxLauncherAsync(
+        public static async FTask FxLauncherAsync (
             string versionFileName,
             string url,
             RuntimeMode runtimeMode = RuntimeMode.Editor)
         {
-            InitInternal(versionFileName, url, runtimeMode);
-            if (FuXiManager.RuntimeMode == RuntimeMode.Editor)
+            try
             {
-                FuXiManager.ManifestVC.NewManifest = ParseManifestCallback?.Invoke();
-                FuXiManager.ManifestVC.InitEncrypt();
+                InitInternal(versionFileName, url, runtimeMode);
+                if (FuXiManager.RuntimeMode == RuntimeMode.Editor)
+                {
+                    FuXiManager.ManifestVC.NewManifest = ParseManifestCallback?.Invoke();
+                    FuXiManager.ManifestVC.InitEncrypt();
+                }
+                else
+                {
+                    FxAsset.FxAssetCreate = FxAsset.CreateAsset;
+                    FxScene.FxSceneCreate = FxScene.CreateScene;
+                    FxRawAsset.FxRawAssetCreate = FxRawAsset.CreateRawAsset;
+                    await new CheckLocalManifest().Execute();
+                }
             }
-            else
+            catch (Exception e)
             {
-                FxAsset.FxAssetCreate = FxAsset.CreateAsset;
-                FxScene.FxSceneCreate = FxScene.CreateScene;
-                FxRawAsset.FxRawAssetCreate = FxRawAsset.CreateRawAsset;
-                await new CheckLocalManifest().Execute();
+                FxDebug.LogError(e.Message);
             }
         }
 
@@ -101,11 +112,18 @@ namespace FuXi
         /// </summary>
         /// <param name="checkUpdate"></param>
         /// <returns></returns>
-        public static async Task FxCheckUpdate(Action<float> checkUpdate = null)
+        public static async FTask FxCheckUpdate(Action<float> checkUpdate = null)
         {
             if (FuXiManager.RuntimeMode != RuntimeMode.Runtime) return;
-            await new CheckWWWManifest(checkUpdate).Execute();
-            FxDebug.Log("Check update finished!");
+            try
+            {
+                await new CheckWWWManifest(checkUpdate).Execute();
+                FxDebug.Log("Check update finished!");
+            }
+            catch (Exception e)
+            {
+                FxDebug.LogError(e.Message);
+            }
         }
 
         /// <summary>
@@ -114,7 +132,7 @@ namespace FuXi
         /// <param name="packages">分包列表</param>
         /// <param name="checkDownload"></param>
         /// <returns></returns>
-        public static async Task<DownloadInfo> FxCheckDownloadSize(string[] packages, Action<float> checkDownload = null)
+        public static async FTask<DownloadInfo> FxCheckDownloadSize(string[] packages, Action<float> checkDownload = null)
         {
             if (FuXiManager.RuntimeMode != RuntimeMode.Runtime) return default;
             CheckDownloadSize c = (CheckDownloadSize) await new CheckDownloadSize(packages, checkDownload).Execute();
@@ -127,7 +145,7 @@ namespace FuXi
         /// <param name="containsPackage">是否包含分包</param>
         /// <param name="checkDownload"></param>
         /// <returns></returns>
-        public static async Task<DownloadInfo> FxCheckDownloadSize(bool containsPackage = false, Action<float> checkDownload = null)
+        public static async FTask<DownloadInfo> FxCheckDownloadSize(bool containsPackage = false, Action<float> checkDownload = null)
         {
             if (FuXiManager.RuntimeMode != RuntimeMode.Runtime) return default;
             CheckDownloadSize c = (CheckDownloadSize) await new CheckDownloadSize(containsPackage, checkDownload).Execute();
@@ -140,10 +158,17 @@ namespace FuXi
         /// <param name="downloadInfo"></param>
         /// <param name="checkDownload"></param>
         /// <returns></returns>
-        public static async Task FxCheckDownload(DownloadInfo downloadInfo, Action<CheckDownloadBundle> checkDownload = null)
+        public static async FTask FxCheckDownload(DownloadInfo downloadInfo, Action<CheckDownloadBundle> checkDownload = null)
         {
             if (FuXiManager.RuntimeMode != RuntimeMode.Runtime) return;
-            await new CheckDownloadBundle(downloadInfo, checkDownload).Execute();
+            try
+            {
+                await new CheckDownloadBundle(downloadInfo, checkDownload).Execute();
+            }
+            catch (Exception e)
+            {
+                FxDebug.LogError(e.Message);
+            }
         }
 
         #endregion

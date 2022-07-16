@@ -12,7 +12,7 @@ namespace FuXi.Editor
         { return new FxEditorScene(path, addition, immediate, callback); }
         
         FxEditorScene(string path, bool additive, bool immediate, Action<float> callback) : base(path, additive, immediate, callback) { }
-        internal override Task<FxAsyncTask> Execute()
+        internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
             if (null != FuXiManager.ManifestVC && !FuXiManager.ManifestVC.TryGetAssetManifest(this.m_ScenePath, out _))
@@ -33,7 +33,7 @@ namespace FuXi.Editor
                     this.m_Operation = EditorSceneManager.LoadSceneAsyncInPlayMode(this.m_ScenePath,
                         new LoadSceneParameters(this.m_LoadMode));
             }
-            return this.tcs.Task;
+            return this.tcs;
         }
 
         protected override void Update()

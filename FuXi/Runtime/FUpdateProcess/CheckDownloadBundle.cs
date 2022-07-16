@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FuXi
 {
@@ -43,12 +42,12 @@ namespace FuXi
             this.m_DownloadFinished = new List<Downloader>();
         }
 
-        internal override Task<FxAsyncTask> Execute()
+        internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
             this.m_CurDownloadSize = 0;
             this.m_DownloadStep = CheckDownloadStep.Downloading;
-            return tcs.Task;
+            return tcs;
         }
 
         protected override void Update()

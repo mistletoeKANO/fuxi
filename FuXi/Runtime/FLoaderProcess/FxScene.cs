@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -35,7 +34,7 @@ namespace FuXi
             this.m_LoadUpdate = callback;
         }
         
-        internal override Task<FxAsyncTask> Execute()
+        internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
             if (FuXiManager.RuntimeMode == RuntimeMode.Editor) return null;
@@ -43,7 +42,7 @@ namespace FuXi
             {
                 this.tcs.SetResult(this);
                 this.isDone = true;
-                return this.tcs.Task;
+                return this.tcs;
             }
             RefreshRef(this);
             this.m_BundleLoader.StartLoad(manifest, this.m_Immediate);
@@ -55,7 +54,7 @@ namespace FuXi
                 this.isDone = true;
             }
             this.m_LoadStep = LoadSceneSteps.LoadBundle;
-            return this.tcs.Task;
+            return this.tcs;
         }
 
         protected override void Update()

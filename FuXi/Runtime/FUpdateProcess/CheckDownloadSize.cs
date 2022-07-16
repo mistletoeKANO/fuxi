@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FuXi
 {
@@ -33,13 +32,13 @@ namespace FuXi
             this.m_CheckUpdate = action;
         }
 
-        internal override Task<FxAsyncTask> Execute()
+        internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
             this.DownloadInfo = new DownloadInfo{DownloadList = new Queue<BundleManifest>()};
             this.m_BundleManifest = new Queue<BundleManifest>();
             this.m_CheckStep = null != this.m_Packages ? CheckSteps.CheckPackage : CheckSteps.CheckNormal;
-            return tcs.Task;
+            return tcs;
         }
 
         protected override void Update()

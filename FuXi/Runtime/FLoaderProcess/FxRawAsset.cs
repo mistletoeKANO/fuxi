@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using UnityEngine.Networking;
+﻿using UnityEngine.Networking;
 
 namespace FuXi
 {
@@ -25,7 +24,7 @@ namespace FuXi
         {
             this.m_PathOrURL = path;
         }
-        internal override Task<FxAsyncTask> Execute()
+        internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
             if (FuXiManager.RuntimeMode == RuntimeMode.Editor) return null;
@@ -33,7 +32,7 @@ namespace FuXi
             {
                 this.tcs.SetResult(this);
                 this.isDone = true;
-                return this.tcs.Task;
+                return this.tcs;
             }
             FuXiManager.ManifestVC.TryGetBundleManifest(manifest.HoldBundle, out this.m_BundleManifest);
             this.m_PathOrURL = FuXiManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest);
@@ -45,7 +44,7 @@ namespace FuXi
             }
             else
                 this.LoadInternal();
-            return this.tcs.Task;
+            return this.tcs;
         }
 
         protected override void Update()

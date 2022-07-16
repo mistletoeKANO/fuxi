@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using UnityEngine.Networking;
 
 // ReSharper disable once CheckNamespace
@@ -19,11 +18,11 @@ namespace FuXi
         private CheckLocalMStep m_Step;
 
         internal CheckLocalManifest() { }
-        internal override Task<FxAsyncTask> Execute()
+        internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
             this.m_Step = CheckLocalMStep.CheckFile;
-            return tcs.Task;
+            return tcs;
         }
 
         protected override void Update()

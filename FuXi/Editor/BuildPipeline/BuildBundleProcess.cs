@@ -21,7 +21,7 @@ namespace FuXi.Editor
         private readonly List<Fx_BuildPackage> buildPackages;
         private readonly List<IBuildBundlePreprocess> bundlePreprocesses;
         
-        private IEncrypt mEncrypt;
+        private BaseEncrypt mEncrypt;
         private AssetBundleManifest manifest;
         private Dictionary<string, string> name2HashName;
         private bool cancel;

@@ -73,7 +73,7 @@ namespace FuXi.Editor
         internal static string[] GetEncryptOptions()
         {
             List<string> options = new List<string> {"None"};
-            var typeBase = typeof(IEncrypt);
+            var typeBase = typeof(BaseEncrypt);
             var assembles = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in assembles)
             {
@@ -102,7 +102,7 @@ namespace FuXi.Editor
             return false;
         }
 
-        internal static IEncrypt LoadEncryptObject(string typeName)
+        internal static BaseEncrypt LoadEncryptObject(string typeName)
         {
             if (string.IsNullOrEmpty(typeName)) return null;
             var assembles = AppDomain.CurrentDomain.GetAssemblies();
@@ -111,7 +111,7 @@ namespace FuXi.Editor
                 var encryptType = assembly.GetType(typeName);
                 if (encryptType == null) continue;
 
-                return System.Activator.CreateInstance(encryptType) as IEncrypt;
+                return System.Activator.CreateInstance(encryptType) as BaseEncrypt;
             }
 
             return null;

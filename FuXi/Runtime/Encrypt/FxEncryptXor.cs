@@ -6,7 +6,7 @@ namespace FuXi
     /// <summary>
     /// 伏羲内置加密, 全字节异或加密
     /// </summary>
-    public class FxEncryptXor : IEncrypt
+    public class FxEncryptXor : BaseEncrypt
     {
         protected override string EncryptHeader => "FxEncryptXOR";
 

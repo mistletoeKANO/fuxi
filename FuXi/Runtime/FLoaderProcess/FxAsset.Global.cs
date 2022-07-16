@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FuXi
 {
@@ -37,7 +36,7 @@ namespace FuXi
         public static FxAsset Load<T>(string path)
         {
             var res = ReferenceAsset(path, typeof(T), true, null).Execute();
-            return (FxAsset) res.Result;
+            return (FxAsset) res.GetResult();
         }
         
         /// <summary>
@@ -59,7 +58,7 @@ namespace FuXi
         /// <param name="path"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static async Task<FxAsset> LoadAsync<T>(string path)
+        public static async FTask<FxAsset> LoadAsync<T>(string path)
         {
             var res = await ReferenceAsset(path, typeof(T), false, null).Execute();
             return (FxAsset) res;

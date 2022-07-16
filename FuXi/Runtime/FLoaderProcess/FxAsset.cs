@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -39,7 +38,7 @@ namespace FuXi
             this.m_BundleLoader = new BundleLoader();
             this.fxReference = new FxReference();
         }
-        internal override Task<FxAsyncTask> Execute()
+        internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
             if (FuXiManager.RuntimeMode == RuntimeMode.Editor) return null;
@@ -52,7 +51,7 @@ namespace FuXi
                 this.isDone = true;
                 this.m_Completed?.Invoke(this);
                 AssetCache.Remove(this.m_FilePath);
-                return this.tcs.Task;
+                return this.tcs;
             }
             this.m_BundleLoader.StartLoad(manifest, this.m_LoadImmediate);
             if (this.m_LoadImmediate)
@@ -63,7 +62,7 @@ namespace FuXi
                 this.isDone = true;
             }
             this.m_LoadStep = LoadSteps.LoadBundle;
-            return this.tcs.Task;
+            return this.tcs;
         }
 
         protected override void Update()

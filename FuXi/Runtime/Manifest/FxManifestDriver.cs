@@ -41,7 +41,7 @@ namespace FuXi
         internal readonly string VersionName;
         internal string NewHash = String.Empty;
 
-        internal IEncrypt GameEncrypt;
+        internal BaseEncrypt GameEncrypt;
         internal FxManifestDriver(string name)
         {
             this.ManifestName = $"{name.Trim()}{FxPathHelper.ManifestFileExtension}";
@@ -65,7 +65,7 @@ namespace FuXi
             }
             if (encryptType != null)
             {
-                this.GameEncrypt = (IEncrypt) Activator.CreateInstance(encryptType);
+                this.GameEncrypt = (BaseEncrypt) Activator.CreateInstance(encryptType);
                 FxDebug.ColorLog(FxDebug.ColorStyle.Cyan,"解密接口 {0}", this.NewManifest.EncryptType);
             }
             else

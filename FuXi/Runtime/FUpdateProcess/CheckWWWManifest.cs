@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using UnityEngine.Networking;
 
 // ReSharper disable once CheckNamespace
@@ -47,14 +46,14 @@ namespace FuXi
             this.m_ServerManifest = $"{FuXiManager.PlatformURL}{FuXiManager.ManifestVC.ManifestName}";
         }
 
-        internal override Task<FxAsyncTask> Execute()
+        internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
             this.m_StepNum = 0;
             this.m_CurUrl = this.m_LocalVersion;
             this.SendWebRequest(this.m_LocalVersion);
             this.m_CurStep = CheckVersionSteps.CheckLocalVersion;
-            return tcs.Task;
+            return tcs;
         }
 
         private void SendWebRequest(string url)

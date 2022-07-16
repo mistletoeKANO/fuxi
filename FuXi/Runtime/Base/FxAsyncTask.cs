@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Threading.Tasks;
 // ReSharper disable once CheckNamespace
 namespace FuXi
 {
@@ -13,13 +12,13 @@ namespace FuXi
         public void Reset() { }
         public object Current => null;
 
-        internal TaskCompletionSource<FxAsyncTask> tcs;
+        internal FTask<FxAsyncTask> tcs;
 
-        internal virtual Task<FxAsyncTask> Execute()
+        internal virtual FTask<FxAsyncTask> Execute()
         {
             this.isDone = false;
             this.progress = 0;
-            tcs = new TaskCompletionSource<FxAsyncTask>();
+            tcs = FTask<FxAsyncTask>.Create(true);
             Processes.Add(this);
             return null;
         }
