@@ -2,7 +2,7 @@
   "name": "com.tendo.fuxi",
   "displayName": "FuXi",
   "description": "简单高效的资源热更新解决方案!",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "unity": "2019.4",
   "license": "MIT",
   "dependencies": {}
