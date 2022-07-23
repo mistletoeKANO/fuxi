@@ -39,9 +39,12 @@ namespace FuXi.Editor
         protected override void Update()
         {
             if (this.isDone) return;
-            this.m_LoadUpdate?.Invoke(this.m_Operation.progress);
-            if (!this.m_Operation.isDone) return;
-            
+            if (this.m_Operation != null)
+            {
+                this.m_LoadUpdate?.Invoke(this.m_Operation.progress);
+                if (!this.m_Operation.isDone) return;
+            }
+
             this.tcs.SetResult(this);
             this.isDone = true;
         }

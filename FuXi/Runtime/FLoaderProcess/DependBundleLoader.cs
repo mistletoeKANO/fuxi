@@ -39,6 +39,7 @@ namespace FuXi
                 {
                     FxDebug.ColorError(FxDebug.ColorStyle.Red, "Bundle {0} is not download, cant load immediate!",
                         this.m_BundleManifest.BundleHashName);
+                    this.isDone = true;
                     return;
                 }
                 else

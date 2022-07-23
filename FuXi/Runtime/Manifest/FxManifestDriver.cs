@@ -41,11 +41,13 @@ namespace FuXi
         internal readonly string VersionName;
         internal string NewHash = String.Empty;
 
+        private Type encryptType;
         internal BaseEncrypt GameEncrypt;
-        internal FxManifestDriver(string name)
+        internal FxManifestDriver(string name, Type encryptType)
         {
             this.ManifestName = $"{name.Trim()}{FxPathHelper.ManifestFileExtension}";
             this.VersionName = $"{name.Trim()}{FxPathHelper.VersionFileExtension}";
+            this.encryptType = encryptType;
         }
 
         /// <summary>
@@ -53,19 +55,25 @@ namespace FuXi
         /// </summary>
         internal void InitEncrypt()
         {
+            if (this.NewManifest == null) return;
             if (string.IsNullOrEmpty(this.NewManifest.EncryptType)) return;
             if (this.NewManifest.EncryptType.Equals("None")) return;
-            
-            Type encryptType = null;
+
+            if (this.encryptType != null) 
+            {
+                this.GameEncrypt = (BaseEncrypt) Activator.CreateInstance(this.encryptType);
+                FxDebug.ColorLog(FxDebug.ColorStyle.Cyan,"解密接口 {0}", this.encryptType);
+                return;
+            }
             var assembles = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assemble in assembles)
             {
-                encryptType = assemble.GetType(this.NewManifest.EncryptType);
-                if (encryptType != null) break;
+                this.encryptType = assemble.GetType(this.NewManifest.EncryptType);
+                if (this.encryptType != null) break;
             }
-            if (encryptType != null)
+            if (this.encryptType != null)
             {
-                this.GameEncrypt = (BaseEncrypt) Activator.CreateInstance(encryptType);
+                this.GameEncrypt = (BaseEncrypt) Activator.CreateInstance(this.encryptType);
                 FxDebug.ColorLog(FxDebug.ColorStyle.Cyan,"解密接口 {0}", this.NewManifest.EncryptType);
             }
             else

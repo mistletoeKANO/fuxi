@@ -26,7 +26,7 @@
         }
     ],
     "dependencies": {
-        "com.tendo.fuxi": "1.1.1"
+        "com.tendo.fuxi": "1.1.2"
     }
 }
 ````

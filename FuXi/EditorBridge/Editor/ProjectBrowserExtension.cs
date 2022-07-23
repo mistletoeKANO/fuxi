@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Globalization;
+using System.Reflection;
 using UnityEditor.IMGUI.Controls;
 
 // ReSharper disable once CheckNamespace
@@ -6,19 +7,19 @@ namespace UnityEditor
 {
     public static class ProjectBrowserExtension
     {
-        public static void RenameSelectAsset(Action<string> renameEndCallBack = null)
+        public static void RenameSelectAsset()
         {
             if (Selection.activeObject == null) return;
             var browser = ProjectBrowser.s_LastInteractedProjectBrowser;
-            TreeViewController at = null;
+            TreeViewController vc = null;
             if (!browser.IsTwoColumns())
             {
                 var ts = typeof(ProjectBrowser).GetField("m_AssetTree", 
                     System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-                at = ts?.GetValue(browser) as TreeViewController;
-                if (at == null) return;
-                TreeViewItem t1 = at.data.FindItem(at.state.lastClickedID);
-                at.gui.BeginRename(t1, 0.0f);
+                vc = ts?.GetValue(browser) as TreeViewController;
+                if (vc == null) return;
+                TreeViewItem t1 = vc.data.FindItem(vc.state.lastClickedID);
+                vc.gui.BeginRename(t1, 0.0f);
             }
             else
             {
@@ -30,12 +31,16 @@ namespace UnityEditor
             void RenameCheck()
             {
                 if (!browser.IsTwoColumns())
-                { if (at.state.renameOverlay.IsRenaming()) return; }
+                { if (vc.state.renameOverlay.IsRenaming()) return; }
                 else
                 { if (browser.ListArea.GetRenameOverlay().IsRenaming()) return; }
+                
+                EditorApplication.CallDelayed(() =>
+                {
+                    var method = typeof(ProjectBrowser).GetMethod("ResetViews", BindingFlags.Instance | BindingFlags.NonPublic);
+                    method?.Invoke(browser, BindingFlags.Instance | BindingFlags.NonPublic, null, null, CultureInfo.CurrentCulture);
+                });
                 EditorApplication.update -= RenameCheck;
-                AssetDatabase.SaveAssets();
-                renameEndCallBack?.Invoke(Selection.activeObject.name);
             }
             EditorApplication.update += RenameCheck;
         }

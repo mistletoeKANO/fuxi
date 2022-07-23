@@ -1,5 +1,6 @@
 ﻿namespace System.Runtime.CompilerServices
 {
+#pragma warning disable 0436
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Method | AttributeTargets.Interface | AttributeTargets.Delegate, Inherited = false, AllowMultiple = false)]
     public sealed class AsyncMethodBuilderAttribute : Attribute
     {
@@ -10,4 +11,5 @@
 
         public Type BuilderType { get; }
     }
+#pragma warning restore
 }

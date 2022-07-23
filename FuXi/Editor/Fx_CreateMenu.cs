@@ -5,14 +5,14 @@ namespace FuXi.Editor
 {
     internal static class Fx_CreateMenu
     {
-        [MenuItem("Assets/Create/FuXi Asset/FuXi Asset", false, 106)]
+        [MenuItem("Assets/Create/FuXi/FuXi Asset", false, 106)]
         private static void CreateFuXiAsset()
         {
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0,
                  ScriptableObject.CreateInstance<DoCreateFuXiBuildAsset>(), Fx_EditorConfigs.DefaultAssetName, Fx_Style.Fx_Asset, null);
         }
         
-        [MenuItem("Assets/Create/FuXi Asset/Add Package", false, 121)]
+        [MenuItem("Assets/Create/FuXi/Add Package", false, 121)]
         private static void AddPackage()
         {
             if (Selection.activeObject.GetType() != typeof(Fx_BuildAsset))
@@ -24,7 +24,7 @@ namespace FuXi.Editor
                 ScriptableObject.CreateInstance<DoCreateFuXiBuildPackage>(), Fx_EditorConfigs.AdditionPackageName, Fx_Style.Fx_AssetPackage, resourceFile);
         }
 
-        [MenuItem("Assets/Create/FuXi Asset/Remove Package", false, 121)]
+        [MenuItem("Assets/Create/FuXi/Remove Package", false, 121)]
         private static void RemovePackage()
         {
             var buildPackage = Selection.activeObject as Fx_BuildPackage;
@@ -39,23 +39,11 @@ namespace FuXi.Editor
             AssetDatabase.SaveAssets();
         }
         
-        [MenuItem("Assets/Create/FuXi Asset/Rename Package", false, 201)]
+        [MenuItem("Assets/Create/FuXi/Rename Package", false, 201)]
         private static void RenamePackage()
         {
             if (Selection.activeObject.GetType() != typeof(Fx_BuildPackage)) return;
-            ProjectBrowserExtension.RenameSelectAsset(resName =>
-            {
-                var existPackages = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(Selection.activeObject));
-                foreach (var p in existPackages)
-                {
-                    if (p == Selection.activeObject) continue;
-                    if (p is Fx_BuildPackage package && package.name == resName)
-                    {
-                        Debug.LogErrorFormat("The bundle package name is repeat: {0}", resName);
-                        break;
-                    }
-                }
-            });
+            ProjectBrowserExtension.RenameSelectAsset();
         }
 
         [UnityEditor.Callbacks.OnOpenAsset(0)]

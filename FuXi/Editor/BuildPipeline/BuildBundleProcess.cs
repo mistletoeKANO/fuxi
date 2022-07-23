@@ -419,6 +419,13 @@ namespace FuXi.Editor
                 var save = $"{verDir}/{diffs[i]}";
                 File.Copy(path, save, true);
             }
+            var manifestSourcePath = FxBuildPath.BundleFullPath($"{trimName}{FxPathHelper.ManifestFileExtension}");
+            var manifestSavePath = $"{verDir}/{trimName}{FxPathHelper.ManifestFileExtension}";
+            File.Copy(manifestSourcePath, manifestSavePath);
+            
+            var verSourcePath = FxBuildPath.BundleFullPath($"{trimName}{FxPathHelper.VersionFileExtension}");
+            var verSavePath = $"{verDir}/{trimName}{FxPathHelper.VersionFileExtension}";
+            File.Copy(verSourcePath, verSavePath);
         }
 
         private void RemoveUnityManifest()

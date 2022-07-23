@@ -26,44 +26,42 @@ namespace FuXi
         /// <param name="versionFileName">版本文件名称</param>
         /// <param name="url">资源服务器地址</param>
         /// <param name="runtimeMode">运行模式</param>
+        /// <param name="encryptType">资源解密类型, 不填，则通过 appdomain 获取设置的加密类型</param>
         /// <returns></returns>
         public static async FTask FxLauncherAsync (
             string versionFileName,
             string url,
-            RuntimeMode runtimeMode = RuntimeMode.Editor)
+            RuntimeMode runtimeMode = RuntimeMode.Editor,
+            Type encryptType = null)
         {
-            try
+            InitInternal(versionFileName, url, runtimeMode, encryptType);
+            if (FuXiManager.RuntimeMode == RuntimeMode.Editor)
             {
-                InitInternal(versionFileName, url, runtimeMode);
-                if (FuXiManager.RuntimeMode == RuntimeMode.Editor)
-                {
-                    FuXiManager.ManifestVC.NewManifest = ParseManifestCallback?.Invoke();
-                    FuXiManager.ManifestVC.InitEncrypt();
-                }
-                else
-                {
-                    FxAsset.FxAssetCreate = FxAsset.CreateAsset;
-                    FxScene.FxSceneCreate = FxScene.CreateScene;
-                    FxRawAsset.FxRawAssetCreate = FxRawAsset.CreateRawAsset;
-                    await new CheckLocalManifest().Execute();
-                }
+                var manifest = ParseManifestCallback?.Invoke() ?? new FxManifest();
+                FuXiManager.ManifestVC.NewManifest = manifest;
+                FuXiManager.ManifestVC.InitEncrypt();
             }
-            catch (Exception e)
+            else
             {
-                FxDebug.LogError(e.Message);
+                FxAsset.FxAssetCreate = FxAsset.CreateAsset;
+                FxScene.FxSceneCreate = FxScene.CreateScene;
+                FxRawAsset.FxRawAssetCreate = FxRawAsset.CreateRawAsset;
+                await new CheckLocalManifest().Execute();
             }
         }
 
         public static CheckLocalManifest FxLauncherAsyncCo(
             string versionFileName,
             string url,
-            RuntimeMode runtimeMode = RuntimeMode.Editor)
+            RuntimeMode runtimeMode = RuntimeMode.Editor,
+            Type encryptType = null)
         {
             CheckLocalManifest check = null;
-            InitInternal(versionFileName, url, runtimeMode);
+            InitInternal(versionFileName, url, runtimeMode, encryptType);
             if (FuXiManager.RuntimeMode == RuntimeMode.Editor)
             {
-                FuXiManager.ManifestVC.NewManifest = ParseManifestCallback?.Invoke();
+                var manifest = ParseManifestCallback?.Invoke() ?? new FxManifest();
+                FuXiManager.ManifestVC.NewManifest = manifest;
                 FuXiManager.ManifestVC.InitEncrypt();
                 check = new CheckLocalManifest{isDone = true};
             }
@@ -81,9 +79,10 @@ namespace FuXi
         private static void InitInternal(
             string versionFileName,
             string url,
-            RuntimeMode runtimeMode)
+            RuntimeMode runtimeMode,
+            Type encryptType = null)
         {
-            FuXiManager.ManifestVC = new FxManifestDriver(versionFileName);
+            FuXiManager.ManifestVC = new FxManifestDriver(versionFileName, encryptType);
             FuXiManager.PlatformURL = url;
             FuXiManager.RuntimeMode = runtimeMode;
             if (FuXiManager.RuntimeMode == RuntimeMode.Editor && !Application.isEditor)
