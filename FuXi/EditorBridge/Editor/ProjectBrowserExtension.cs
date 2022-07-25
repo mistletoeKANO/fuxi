@@ -34,12 +34,12 @@ namespace UnityEditor
                 { if (vc.state.renameOverlay.IsRenaming()) return; }
                 else
                 { if (browser.ListArea.GetRenameOverlay().IsRenaming()) return; }
-                
+                AssetDatabase.SaveAssets();
                 EditorApplication.CallDelayed(() =>
                 {
                     var method = typeof(ProjectBrowser).GetMethod("ResetViews", BindingFlags.Instance | BindingFlags.NonPublic);
                     method?.Invoke(browser, BindingFlags.Instance | BindingFlags.NonPublic, null, null, CultureInfo.CurrentCulture);
-                });
+                },0.01);
                 EditorApplication.update -= RenameCheck;
             }
             EditorApplication.update += RenameCheck;
