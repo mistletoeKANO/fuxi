@@ -1,6 +1,6 @@
 # 伏羲 (FuXi) 
 
-[![License](https://img.shields.io/github/license/mistletoeKANO/fuxi)]([https://github.com/mistletoeKANO/fuxi/blob/master/LICENSE](https://github.com/mistletoeKANO/fuxi/blob/main/LICENSE))[![openupm](https://img.shields.io/npm/v/com.tendo.fuxi?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.cn/packages/com.tendo.fuxi/)
+[![License](https://img.shields.io/github/license/mistletoeKANO/fuxi)]([https://github.com/mistletoeKANO/fuxi/blob/master/LICENSE](https://github.com/mistletoeKANO/fuxi/blob/main/LICENSE))[![openupm](https://img.shields.io/npm/v/com.tendo.fuxi?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.cn/packages/com.tendo.fuxi/)[![Labeler](https://github.com/mistletoeKANO/fuxi/actions/workflows/label.yml/badge.svg)](https://github.com/mistletoeKANO/fuxi/actions/workflows/label.yml)
 
 ### **版本资源 管理 工具**
 
