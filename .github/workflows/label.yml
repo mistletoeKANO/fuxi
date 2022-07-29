@@ -5,7 +5,7 @@
 # file with configuration.  For more information, see:
 # https://github.com/actions/labeler
 
-name: github
+name: Labeler
 
 on: push
 
@@ -23,8 +23,3 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           yaml-file: .github/workflows/label.yml
-          skip-delete: false
-          dry-run: false
-          exclude: |
-            help*
-            *issue
