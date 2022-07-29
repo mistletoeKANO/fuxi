@@ -17,6 +17,12 @@ jobs:
       pull-requests: write
 
     steps:
-    - uses: actions/labeler@v4
+    -
+      name: Checkout
+      uses: actions/checkout@v1.1.3
+    -
+      name: Run Labeler
+      if: success()
+      uses: crazy-max/ghaction-github-labeler@v1.1.4
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
