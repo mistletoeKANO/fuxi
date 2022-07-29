@@ -49,8 +49,9 @@ namespace FuXi.Editor
         [UnityEditor.Callbacks.OnOpenAsset(0)]
         private static bool OnMapAssetOpened(int instanceId, int line)
         {
-            var selectAsset = Selection.activeObject as Fx_BuildAsset;
-            if (selectAsset == null) return false;
+            var path = AssetDatabase.GetAssetPath(instanceId);
+            var instance = AssetDatabase.LoadAssetAtPath<Fx_BuildAsset>(path);
+            if (instance == null) return false;
             EditorWindow.GetWindow<Fx_BundleReferenceWindow>();
             return true;
         }

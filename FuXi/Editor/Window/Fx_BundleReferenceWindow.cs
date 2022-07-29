@@ -114,6 +114,7 @@ namespace FuXi.Editor
         private IMGUIContainer m_FootView;
         private FxAsset m_FxAsset;
         private Vector2 m_FooterScrollPos = Vector2.zero;
+        private Rect m_CursorRect = new Rect(Vector2.zero, Vector2.one);
         private bool m_FBundleFlag = false;
         private bool m_FBundleFlag2 = false;
         private readonly int kDragHandleControlID = "DragFooterHandle".GetHashCode();
@@ -154,6 +155,8 @@ namespace FuXi.Editor
             if (this.m_ViewType == ViewType.BundleView) return;
             int controlId = GUIUtility.GetControlID(kDragHandleControlID, FocusType.Passive);
             Event current = Event.current;
+            this.m_CursorRect.position = current.mousePosition;
+            EditorGUIUtility.AddCursorRect(this.m_CursorRect, MouseCursor.ResizeVertical, controlId);
             if (current.type == EventType.Layout || current.type == EventType.Repaint) return;
             switch (current.GetTypeForControl(controlId))
             {
