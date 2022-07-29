@@ -15,7 +15,7 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v1.1.4
+        uses: actions/checkout@1.1.4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           yaml-file: .github/workflows/label.yml
