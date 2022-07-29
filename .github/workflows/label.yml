@@ -22,7 +22,7 @@ jobs:
         uses: crazy-max/ghaction-github-labeler@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          yaml-file: fuxi/.github/labels.yml
+          yaml-file: .github/label.yml
           skip-delete: false
           dry-run: false
           exclude: |
