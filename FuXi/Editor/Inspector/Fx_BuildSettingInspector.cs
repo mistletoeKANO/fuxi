@@ -1,6 +1,5 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 // ReSharper disable once CheckNamespace
 namespace FuXi.Editor
@@ -8,7 +7,6 @@ namespace FuXi.Editor
     [CustomEditor(typeof(Fx_BuildSetting), true)]
     public class Fx_BuildSettingInspector : UnityEditor.Editor
     {
-        private VisualElement m_Root = null;
         static class Style
         {
             public static readonly GUIContent BundleRootPath = EditorGUIUtility.TrTextContent("资源根路径","AssetBundle 资源 根路径");
@@ -30,6 +28,7 @@ namespace FuXi.Editor
 
         private string[] encryptOptions;
         private int encryptSelectIndex = 0;
+        private bool IsCopyAllValid = true;
 
         private void OnEnable()
         {
@@ -54,34 +53,19 @@ namespace FuXi.Editor
                     this.encryptSelectIndex = i;
                 }
             }
+            this.IsCopyAllValid = this.CheckCopyAllValidate();
         }
         public override bool UseDefaultMargins() { return false; }
-        public override VisualElement CreateInspectorGUI()
-        {
-            this.m_Root = new VisualElement();
-            var commonStyle = Resources.Load<StyleSheet>(Fx_Style.Fx_CommonInspector_Uss);
-            if (commonStyle != null)
-            {
-                this.m_Root.styleSheets.Add(commonStyle);
-            }
-            this.m_Root.AddToClassList(Fx_Style.Fx_Inspector_Margins);
-            
-            IMGUIContainer imguiContainer = new IMGUIContainer(this.OnGUI);
-            this.m_Root.Add(imguiContainer);
 
-            IMGUIContainer footerContainer = new IMGUIContainer(this.OnFooterGUI);
-            this.m_Root.Add(footerContainer);
-
-            return this.m_Root;
-        }
-
-        private void OnGUI()
+        public override void OnInspectorGUI()
         {
             serializedObject.Update();
+            EditorGUILayout.Space(2);
             EditorGUILayout.PropertyField(this.m_BundleRootPath, Style.BundleRootPath);
             EditorGUILayout.PropertyField(this.m_ExtensionName, Style.ExtensionName);
             EditorGUILayout.PropertyField(this.m_FxPlatform, Style.FxPlatform);
 
+            EditorGUI.BeginChangeCheck();
             int selectIndex = EditorGUILayout.Popup(Style.EncryptType, this.encryptSelectIndex, this.encryptOptions);
             if (selectIndex != this.encryptSelectIndex)
             {
@@ -89,11 +73,36 @@ namespace FuXi.Editor
                 this.encryptSelectIndex = selectIndex;
             }
             EditorGUILayout.PropertyField(this.m_CopyAllBundle2Player, Style.CopyAllBundle2Player);
+            if (EditorGUI.EndChangeCheck())
+            {
+                this.IsCopyAllValid = this.CheckCopyAllValidate();
+            }
+
+            if (!this.IsCopyAllValid)
+            {
+                EditorGUILayout.HelpBox("仅未加密或者OFFSET加密支持全拷贝! 详情查看相关说明!", MessageType.Warning);
+            }
+
             EditorGUILayout.PropertyField(this.m_ExcludeExtensions, Style.ExcludeExtensions);
             EditorGUILayout.PropertyField(this.m_BuiltinPackages, Style.BuiltinPackages);
+
+            this.OnFooterGUI();
             serializedObject.ApplyModifiedProperties();
         }
-        
+
+        private bool CheckCopyAllValidate()
+        {
+            if (this.encryptSelectIndex == 0)
+                return true;
+            var encryptFullName = this.encryptOptions[encryptSelectIndex];
+            var encryptType = BuildHelper.LoadEncryptObject(encryptFullName);
+            if (encryptType == null)
+                return true;
+            if (this.m_CopyAllBundle2Player.boolValue)
+                return encryptType.EncryptMode == EncryptMode.OFFSET;
+            return true;
+        }
+
         private void OnFooterGUI()
         {
             GUILayout.BeginHorizontal();
@@ -102,7 +111,7 @@ namespace FuXi.Editor
                 if (EditorUtility.DisplayDialog("Copy Bundle", "Are you sure Copy bundle to StreamingAssets?",
                     "YES", "NO"))
                 {
-                    EditorApplication.delayCall += this.DelayCopyBundle;
+                    EditorExtension.CallDelay(this.DelayCopyBundle, 0.1f);
                 }
             }
             if (GUILayout.Button("Clear Bundle", GUILayout.Height(30)))
@@ -110,7 +119,7 @@ namespace FuXi.Editor
                 if (EditorUtility.DisplayDialog("Clear Bundle", "Are you sure Clear bundle from StreamingAssets?",
                     "YES", "NO"))
                 {
-                    EditorApplication.delayCall += this.DelayClearBundle;
+                    EditorExtension.CallDelay(this.DelayClearBundle, 0.1f);
                 }
             }
 

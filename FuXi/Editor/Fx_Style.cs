@@ -5,21 +5,12 @@ namespace FuXi.Editor
 {
     public static class Fx_Style
     {
-        public static readonly Texture2D Fx_Asset = Resources.Load<Texture2D>("Gizmos/Fx_Asset");
-        public static readonly Texture2D Fx_About = Resources.Load<Texture2D>("Gizmos/Fx_About");
-        public static readonly Texture2D Fx_PathMenu = Resources.Load<Texture2D>("Gizmos/Fx_PathMenu");
-        public static readonly Texture2D Fx_AssetBlack = Resources.Load<Texture2D>("Gizmos/Fx_Asset Black");
-        public static readonly Texture2D Fx_AssetPackage = Resources.Load<Texture2D>("Gizmos/Fx_AssetPackage");
+        internal static readonly Texture2D Fx_Asset = Resources.Load<Texture2D>("Gizmos/Fx_Asset");
+        internal static readonly Texture2D Fx_About = Resources.Load<Texture2D>("Gizmos/Fx_About");
+        internal static readonly Texture2D Fx_PathMenu = Resources.Load<Texture2D>("Gizmos/Fx_PathMenu");
+        internal static readonly Texture2D Fx_AssetBlack = Resources.Load<Texture2D>("Gizmos/Fx_Asset Black");
+        internal static readonly Texture2D Fx_AssetPackage = Resources.Load<Texture2D>("Gizmos/Fx_AssetPackage");
 
-        public static readonly string Fx_CommonInspector_Uss = "Uss/Fx_CommonInspector";
-        public static readonly string Fx_BuildAsset_Uss = "Uss/Fx_BuildAsset";
-        
-        public static readonly string Fx_Inspector_Margins = "fx-inspector-margins";
-        
-        public static readonly string Fx_BuildAsset_Root_Class = "fx-buildAsset-root";
-        public static readonly string Fx_BuildAsset_Main_Class = "fx-buildAsset-main";
-        public static readonly string Fx_BuildAsset_Foot_Class = "fx-buildAsset-foot";
-        
         internal static readonly GUIContent RefWindowTitle = new GUIContent("引用分析", Resources.Load<Texture2D>("Gizmos/Fx_Asset Black"));
         internal static readonly GUIContent VerWindowTitle = new GUIContent("版本预览", Resources.Load<Texture2D>("Gizmos/Fx_Asset Black"));
         internal static readonly GUIContent PrefabIcon = EditorGUIUtility.IconContent("d_Prefab Icon");

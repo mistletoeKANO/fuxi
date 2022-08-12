@@ -7,11 +7,11 @@ namespace FuXi
     public enum RuntimeMode
     {
         /// <summary>
-        /// 不走ab包逻辑
+        /// 纯编辑器模式
         /// </summary>
         Editor,
         /// <summary>
-        /// 离线模式
+        /// 离线AB模式
         /// </summary>
         Offline,
         /// <summary>

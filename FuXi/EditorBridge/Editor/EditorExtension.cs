@@ -8,6 +8,12 @@ namespace UnityEditor
         {
             public static readonly GUIStyle IconButton = EditorStyles.iconButton;
         }
+
+        public static void CallDelay(UnityEditor.EditorApplication.CallbackFunction action, float time)
+        {
+            EditorApplication.CallDelayed(action, time);
+        }
+        
         public static void ClearConsole()
         {
             LogEntries.Clear();

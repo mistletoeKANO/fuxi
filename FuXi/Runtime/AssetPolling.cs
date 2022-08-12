@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -6,7 +5,12 @@ namespace FuXi
 {
     public class AssetPolling : MonoBehaviour
     {
-        private static readonly float timeSlice = 0.04f; // s
+        public static float TimeSlice
+        {
+            get => timeSlice;
+            set => timeSlice = value;
+        }
+        private static float timeSlice = 0.04f; // s
         private static float lastCheckTime = 0;
         internal static bool IsTimeOut
         {

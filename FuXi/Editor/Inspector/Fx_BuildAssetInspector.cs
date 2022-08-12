@@ -1,16 +1,14 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 // ReSharper disable once CheckNamespace
 namespace FuXi.Editor
 {
     [CustomEditor(typeof(Fx_BuildAsset), true)]
+    [CanEditMultipleObjects]
     public class Fx_BuildAssetInspector : UnityEditor.Editor
     {
-        private VisualElement m_Root = default;
-
         static class Style
         {
             public static readonly Vector2 IconSize = new Vector2(16, 16);
@@ -135,35 +133,10 @@ namespace FuXi.Editor
 
         public override bool UseDefaultMargins() { return false; }
 
-        public override VisualElement CreateInspectorGUI()
-        {
-            this.m_Root = new VisualElement();
-            var commonStyle = Resources.Load<StyleSheet>(Fx_Style.Fx_CommonInspector_Uss);
-            if (commonStyle != null)
-            {
-                this.m_Root.styleSheets.Add(commonStyle);
-            }
-            var mainStyle = Resources.Load<StyleSheet>(Fx_Style.Fx_BuildAsset_Uss);
-            if (mainStyle != null)
-            {
-                this.m_Root.styleSheets.Add(mainStyle);
-            }
-            this.m_Root.AddToClassList(Fx_Style.Fx_Inspector_Margins);
-
-            IMGUIContainer imguiContainer = new IMGUIContainer(this.OnGUI);
-            this.m_Root.Add(imguiContainer);
-            imguiContainer.AddToClassList(Fx_Style.Fx_BuildAsset_Main_Class);
-
-            IMGUIContainer footerContainer = new IMGUIContainer(this.OnFooterGUI);
-            this.m_Root.Add(footerContainer);
-            footerContainer.AddToClassList(Fx_Style.Fx_BuildAsset_Foot_Class);
-            
-            return this.m_Root;
-        }
-
-        private void OnGUI()
+        public override void OnInspectorGUI()
         {
             serializedObject.Update();
+            EditorGUILayout.Space(2);
             EditorGUIUtility.labelWidth = 120;
             EditorGUILayout.BeginHorizontal();
 
@@ -178,6 +151,7 @@ namespace FuXi.Editor
             
             EditorGUILayout.PropertyField(this.m_FxObjectList, Style.CPackageList);
             this.CheckFxObjectList();
+            this.OnFooterGUI();
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -235,7 +209,7 @@ namespace FuXi.Editor
                 if (EditorUtility.DisplayDialog("Build Asset Bundle", "Are you sure build asset bundle for this rule?",
                     "YES", "NO"))
                 {
-                    EditorApplication.delayCall += this.DelayBuildBundle;
+                    EditorExtension.CallDelay(this.DelayBuildBundle, 0.1f);
                 }
             }
 
@@ -244,7 +218,7 @@ namespace FuXi.Editor
                 if (EditorUtility.DisplayDialog("Build Player", "Are you sure build player for this rule?",
                     "YES", "NO"))
                 {
-                    EditorApplication.delayCall += this.DelayBuildPlayer;
+                    EditorExtension.CallDelay(this.DelayBuildPlayer, 0.1f);
                 }
             }
 
