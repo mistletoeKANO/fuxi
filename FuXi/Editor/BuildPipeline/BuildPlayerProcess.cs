@@ -213,7 +213,7 @@ namespace FuXi.Editor
             {
                 scenes = buildScenes.ToArray(),
                 target = EditorUserBuildSettings.activeBuildTarget,
-                locationPathName = FxBuildPath.PlayerFullPath(this.BuildPlayerName(PlayerSettings.bundleVersion)),
+                locationPathName = FxBuildPath.PlayerFullPath(BuildHelper.GetPlayerName()),
                 options = EditorUserBuildSettings.development? BuildOptions.Development : BuildOptions.None
             };
             var buildReport = BuildPipeline.BuildPlayer(buildOption);
@@ -237,23 +237,6 @@ namespace FuXi.Editor
         {
             foreach (var process in this.playerPreprocesses)
                 process.BuildPlayerPost();
-        }
-        
-        private string BuildPlayerName(string version)
-        {
-            var targetName = $"/fx-v{version}-{DateTime.Now:yyyyMMdd-HHmmss}";
-            switch (EditorUserBuildSettings.activeBuildTarget)
-            {
-                case BuildTarget.Android:
-                    return targetName + ".apk";
-                case BuildTarget.StandaloneWindows:
-                case BuildTarget.StandaloneWindows64:
-                    return targetName + ".exe";
-                case BuildTarget.StandaloneOSX:
-                    return targetName + ".app";
-                default:
-                    return targetName;
-            }
         }
 
         public void OnAssetValueChanged() => EditorUtility.SetDirty(this.buildAsset);

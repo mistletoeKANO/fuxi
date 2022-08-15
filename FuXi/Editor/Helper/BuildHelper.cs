@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEditor;
 
 // ReSharper disable once CheckNamespace
@@ -115,6 +116,47 @@ namespace FuXi.Editor
             }
 
             return null;
+        }
+
+        #endregion
+
+        #region 自定义 包名
+
+        internal static string GetPlayerName()
+        {
+            IPlayerNameDefine maxPriorityDefine = default;
+            int maxPriority = 0;
+            var typeBase = typeof(IPlayerNameDefine);
+            var assembles = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assembles)
+            {
+                if (CheckIgnore(assembly.GetName().Name)) continue;
+
+                System.Type[] types = assembly.GetTypes();
+                foreach (System.Type type in types)
+                {
+                    if (!type.IsClass || type.IsAbstract || !typeBase.IsAssignableFrom(type))
+                        continue;
+                    var attr = (PlayerNamePriorityAttribute) type.GetCustomAttribute(typeof(PlayerNamePriorityAttribute));
+                    var inst = (IPlayerNameDefine) Activator.CreateInstance(type);
+                    if (maxPriorityDefine == null)
+                    {
+                        maxPriorityDefine = inst;
+                        maxPriority = attr.priority;
+                    }
+                    else
+                    {
+                        if (attr.priority <= maxPriority)
+                            continue;
+                        maxPriorityDefine = inst;
+                        maxPriority = attr.priority;
+                    }
+                }
+            }
+            var version = PlayerSettings.bundleVersion;
+            if (maxPriorityDefine == null)
+                maxPriorityDefine = new Fx_PlayerName();
+            return maxPriorityDefine.GetPlayerName(version);
         }
 
         #endregion

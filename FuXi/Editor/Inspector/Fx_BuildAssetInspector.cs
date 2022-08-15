@@ -203,6 +203,8 @@ namespace FuXi.Editor
 
         private void OnFooterGUI()
         {
+            if (Event.current == null)
+                return;
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Build Bundle", GUILayout.Height(30)))
             {
