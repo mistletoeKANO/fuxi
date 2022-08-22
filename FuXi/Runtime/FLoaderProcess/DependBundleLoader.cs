@@ -37,7 +37,7 @@ namespace FuXi
             {
                 if (immediate)
                 {
-                    FxDebug.ColorError(FxDebug.ColorStyle.Red, "Bundle {0} is not download, cant load immediate!",
+                    FxDebug.ColorError(FX_LOG_CONTROL.Red, "Bundle {0} is not download, cant load immediate!",
                         this.m_BundleManifest.BundleHashName);
                     this.isDone = true;
                     return;
@@ -81,7 +81,7 @@ namespace FuXi
                 case LoadStep.LoadBundle:
                     this.progress = 0.3f + this.m_BundleRequest.progress * 0.7f;
                     if (!this.m_BundleRequest.isDone) return;
-                    FxDebug.ColorLog(FxDebug.ColorStyle.Cyan, "LoadBundle {0}", this.m_PathOrURL);
+                    FxDebug.ColorLog(FX_LOG_CONTROL.Cyan, "LoadBundle {0}", this.m_PathOrURL);
                     this.assetBundle = this.m_BundleRequest.assetBundle;
                     this.isDone = true;
                     break;
@@ -143,7 +143,7 @@ namespace FuXi
         {
             if (!this.fxReference.SubRef()) return;
             if (this.fxReference.RefCount < 0)
-                FxDebug.ColorWarning(FxDebug.ColorStyle.Orange, "Release over: {0}", this.m_BundleManifest.BundleHashName);
+                FxDebug.ColorWarning(FX_LOG_CONTROL.Orange, "Release over: {0}", this.m_BundleManifest.BundleHashName);
             ReleaseBundleLoader(this.m_BundleManifest);
         }
     }

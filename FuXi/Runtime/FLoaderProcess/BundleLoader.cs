@@ -13,7 +13,7 @@ namespace FuXi
         {
             if (manifest.IsRawFile)
             {
-                FxDebug.ColorError(FxDebug.ColorStyle.Orange, "Raw File {0} cant load as bundle!", manifest.Path);
+                FxDebug.ColorError(FX_LOG_CONTROL.Orange, "Raw File {0} cant load as bundle!", manifest.Path);
                 this.isDone = true;
                 return;
             }

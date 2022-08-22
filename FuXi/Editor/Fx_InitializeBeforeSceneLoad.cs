@@ -58,7 +58,7 @@ namespace FuXi.Editor
                 if (manifest.Path2AssetManifest.ContainsKey(asManifest.Path)) continue;
                 manifest.Path2AssetManifest.Add(asManifest.Path, asManifest);
             }
-            FxDebug.ColorLog(FxDebug.ColorStyle.Green, "Load editor manifest {0}.", buildAsset.name);
+            FxDebug.ColorLog(FX_LOG_CONTROL.Green, "Load editor manifest {0}.", buildAsset.name);
             return manifest;
         }
 

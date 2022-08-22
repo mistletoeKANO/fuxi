@@ -132,7 +132,7 @@ namespace FuXi
 
         private void ThrowDownloadError(object path)
         {
-            FxDebug.ColorError(FxDebug.ColorStyle.Red, (string) path, this.m_SavePath);
+            FxDebug.ColorError(FX_LOG_CONTROL.Red, (string) path, this.m_SavePath);
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
-## 安装 伏羲(FuXi)
-
+## 导入 FuXi
+A：
 1. Open Edit/Project Settings/Package Manager
 2. Add a new Scoped Registry (or edit the existing OpenUPM entry)
 3.  Name: FuXi
@@ -12,7 +12,7 @@
 6. Change Packages to My Registries
 7. Install FuXi
 
-### 或者 拷贝以下内容 到 Packages/manifest.json
+B： 或者 拷贝以下内容 到 Packages/manifest.json
 
 ````
 {
@@ -26,12 +26,12 @@
         }
     ],
     "dependencies": {
-        "com.tendo.fuxi": "1.1.6"
+        "com.tendo.fuxi": "1.1.7"
     }
 }
 ````
 
-# 从 0 开始使用
+# 简单介绍
 
 ### 新增配置, 配置参数说明
 

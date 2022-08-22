@@ -19,7 +19,7 @@ namespace FuXi
         internal void StartDownload()
         {
             this.m_ThreadDownloader.Start(this.m_BundleManifest);
-            FxDebug.ColorLog(FxDebug.ColorStyle.Green, "Download bundle {0}", this.m_BundleManifest.BundleHashName);
+            FxDebug.ColorLog(FX_LOG_CONTROL.Green, "Download bundle {0}", this.m_BundleManifest.BundleHashName);
         }
 
         internal void Update()

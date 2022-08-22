@@ -77,7 +77,7 @@ namespace FuXi
                 if (this.m_CurRetryCount < this.m_RetryCount)
                 {
                     this.m_CurRetryCount++;
-                    FxDebug.ColorLog(FxDebug.ColorStyle.Red, "Retry download {0} retry count: {1}.",
+                    FxDebug.ColorLog(FX_LOG_CONTROL.Red, "Retry download {0} retry count: {1}.",
                         this.m_CurUrl, this.m_CurRetryCount);
                     this.SendWebRequest(this.m_CurUrl);
                 }

@@ -15,7 +15,7 @@ namespace FuXi.Editor
             }
             catch (Exception e)
             {
-                FxDebug.ColorError(FxDebug.ColorStyle.Red, "Build bundle failure in platform {0} with error {1}",
+                FxDebug.ColorError(FX_LOG_CONTROL.Red, "Build bundle failure in platform {0} with error {1}",
                     platform, e.Message);
             }
         }
@@ -31,7 +31,7 @@ namespace FuXi.Editor
             }
             catch (Exception e)
             {
-                FxDebug.ColorError(FxDebug.ColorStyle.Red, "Build player failure in platform {0} with error {1}",
+                FxDebug.ColorError(FX_LOG_CONTROL.Red, "Build player failure in platform {0} with error {1}",
                     platform, e.Message);
             }
             
@@ -49,7 +49,7 @@ namespace FuXi.Editor
             }
             catch (Exception e)
             {
-                FxDebug.ColorError(FxDebug.ColorStyle.Red, "Build failure in platform {0} with error {1}",
+                FxDebug.ColorError(FX_LOG_CONTROL.Red, "Build failure in platform {0} with error {1}",
                     platform, e.Message);
             }
         }

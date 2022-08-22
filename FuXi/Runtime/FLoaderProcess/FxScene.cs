@@ -100,7 +100,7 @@ namespace FuXi
             if (this.m_Parent != null)
             {
                 SceneManager.UnloadSceneAsync(this.m_ScenePath);
-                FxDebug.ColorLog(FxDebug.ColorStyle.Cyan2, "Unload scene {0}", this.m_ScenePath);
+                FxDebug.ColorLog(FX_LOG_CONTROL.LightCyan, "Unload scene {0}", this.m_ScenePath);
             }
             this.m_BundleLoader?.Release();
             foreach (var fxScene in this.m_SubScenes)

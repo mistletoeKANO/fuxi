@@ -14,7 +14,7 @@ namespace FuXi
             {
                 var releaseBundle = UnUsedBundle.Dequeue();
                 if (releaseBundle.assetBundle == null) return;
-                FxDebug.ColorLog(FxDebug.ColorStyle.Cyan2, "Unload bundle {0}", releaseBundle.m_BundleManifest.BundleHashName);
+                FxDebug.ColorLog(FX_LOG_CONTROL.LightCyan, "Unload bundle {0}", releaseBundle.m_BundleManifest.BundleHashName);
                 releaseBundle.assetBundle.Unload(true);
                 releaseBundle.assetBundle = null;
                 if (AssetPolling.IsTimeOut) break;

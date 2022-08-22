@@ -203,8 +203,6 @@ namespace FuXi.Editor
 
         private void OnFooterGUI()
         {
-            if (Event.current == null)
-                return;
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Build Bundle", GUILayout.Height(30)))
             {
@@ -212,6 +210,7 @@ namespace FuXi.Editor
                     "YES", "NO"))
                 {
                     EditorExtension.CallDelay(this.DelayBuildBundle, 0.1f);
+                    return;
                 }
             }
 
@@ -221,9 +220,9 @@ namespace FuXi.Editor
                     "YES", "NO"))
                 {
                     EditorExtension.CallDelay(this.DelayBuildPlayer, 0.1f);
+                    return;
                 }
             }
-
             GUILayout.EndHorizontal();
         }
 

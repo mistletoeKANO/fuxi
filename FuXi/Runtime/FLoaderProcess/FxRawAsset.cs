@@ -67,7 +67,7 @@ namespace FuXi
                     this.Data = this.m_WebRequest.downloadHandler.data;
                     if (this.Data.Length == 0)
                     {
-                        FxDebug.ColorWarning(FxDebug.ColorStyle.Orange, "FxRawAsset read file {0} bytes failure", this.m_PathOrURL);
+                        FxDebug.ColorWarning(FX_LOG_CONTROL.Orange, "FxRawAsset read file {0} bytes failure", this.m_PathOrURL);
                         return;
                     }
                     if (FuXiManager.ManifestVC.GameEncrypt != null && FuXiManager.ManifestVC.GameEncrypt.IsEncrypted(this.Data))

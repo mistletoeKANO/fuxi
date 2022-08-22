@@ -112,6 +112,7 @@ namespace FuXi.Editor
                     "YES", "NO"))
                 {
                     EditorExtension.CallDelay(this.DelayCopyBundle, 0.1f);
+                    return;
                 }
             }
             if (GUILayout.Button("Clear Bundle", GUILayout.Height(30)))
@@ -120,6 +121,7 @@ namespace FuXi.Editor
                     "YES", "NO"))
                 {
                     EditorExtension.CallDelay(this.DelayClearBundle, 0.1f);
+                    return;
                 }
             }
 

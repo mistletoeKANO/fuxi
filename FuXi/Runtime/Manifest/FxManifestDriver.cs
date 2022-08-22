@@ -62,7 +62,7 @@ namespace FuXi
             if (this.encryptType != null) 
             {
                 this.GameEncrypt = (BaseEncrypt) Activator.CreateInstance(this.encryptType);
-                FxDebug.ColorLog(FxDebug.ColorStyle.Cyan,"解密接口 {0}", this.encryptType);
+                FxDebug.ColorLog(FX_LOG_CONTROL.Cyan,"解密接口 {0}", this.encryptType);
                 return;
             }
             var assembles = AppDomain.CurrentDomain.GetAssemblies();
@@ -74,17 +74,17 @@ namespace FuXi
             if (this.encryptType != null)
             {
                 this.GameEncrypt = (BaseEncrypt) Activator.CreateInstance(this.encryptType);
-                FxDebug.ColorLog(FxDebug.ColorStyle.Cyan,"解密接口 {0}", this.NewManifest.EncryptType);
+                FxDebug.ColorLog(FX_LOG_CONTROL.Cyan,"解密接口 {0}", this.NewManifest.EncryptType);
             }
             else
-                FxDebug.ColorError(FxDebug.ColorStyle.Red,"未发现解密接口 {0}", this.NewManifest.EncryptType);
+                FxDebug.ColorError(FX_LOG_CONTROL.Red,"未发现解密接口 {0}", this.NewManifest.EncryptType);
         }
         
         internal bool TryGetAssetManifest(string assetPath, out AssetManifest manifest)
         {
             if (!this.NewManifest.Path2AssetManifest.TryGetValue(assetPath, out manifest))
             {
-                FxDebug.ColorError(FxDebug.ColorStyle.Red, "File {0} not found", assetPath);
+                FxDebug.ColorError(FX_LOG_CONTROL.Red, "File {0} not found", assetPath);
                 return false;
             }
             return true;
@@ -95,7 +95,7 @@ namespace FuXi
             if (this.NewManifest.Bundles == null) return false;
             if (index >= this.NewManifest.Bundles.Length || index < 0)
             {
-                FxDebug.ColorError(FxDebug.ColorStyle.Red, "Load bundle index {0} is out of range!", index);
+                FxDebug.ColorError(FX_LOG_CONTROL.Red, "Load bundle index {0} is out of range!", index);
                 return false;
             }
             manifest = this.NewManifest.Bundles[index];
@@ -166,7 +166,7 @@ namespace FuXi
         {
             if (!this.NewManifest.Name2BundleManifest.TryGetValue(bundleName, out var manifest))
             {
-                FxDebug.ColorWarning(FxDebug.ColorStyle.Orange, "bundle {0} is not valid", bundleName);
+                FxDebug.ColorWarning(FX_LOG_CONTROL.Orange, "bundle {0} is not valid", bundleName);
                 return default;
             }
             var path = FxPathHelper.PersistentLoadPath(bundleName);
