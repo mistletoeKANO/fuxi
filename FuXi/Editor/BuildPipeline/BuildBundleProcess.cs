@@ -172,7 +172,10 @@ namespace FuXi.Editor
                 {
                     throw new Exception($"Bundle package name is repeated: {package.name}");
                 }
-                var bundlePackage = new BundlePackage() {packageName = package.name, bundles = new List<string>()};
+                //内置包不作为独立DLC
+                if (this.buildSetting.BuiltinPackages.Contains(package))
+                    continue;
+                var bundlePackage = new BundlePackage {packageName = package.name, bundles = new List<string>()};
                 if (package.PackageObjects == null) continue;
                 int length = package.PackageObjects.Count;
                 for (int j = 0; j < length; j++)
@@ -324,6 +327,8 @@ namespace FuXi.Editor
             var fxManifest = new FxManifest
             {
                 EncryptType = this.buildSetting.EncryptType,
+                RootPath = this.buildSetting.BundleRootPath,
+                OpenBreakResume = this.buildSetting.OpenBreakResume,
                 Bundles = new BundleManifest[this.m_BundleName2Builds.Count],
                 Assets = new AssetManifest[this.m_Asset2BundleName.Count]
             };

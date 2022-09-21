@@ -20,12 +20,15 @@ namespace FuXi.Editor
             var manifest = new FxManifest();
             BuildPlateForm buildPlateForm = RunPlatform2BuildPlatform();
             Fx_BuildAsset buildAsset = BuildHelper.GetBuildAsset(buildPlateForm);
-            
+
             if (buildAsset == null)
             {
                 FxDebug.LogError("build asset is not found for this platform!");
                 return null;
             }
+            Fx_BuildSetting buildSetting =
+                UnityEditor.AssetDatabase.LoadAssetAtPath<Fx_BuildSetting>(AssetDatabase.GetAssetPath(buildAsset));
+            manifest.RootPath = buildSetting.BundleRootPath;
             
             List<AssetManifest> assetManifests = new List<AssetManifest>();
 

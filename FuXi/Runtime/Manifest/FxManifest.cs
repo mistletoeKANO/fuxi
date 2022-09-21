@@ -14,6 +14,10 @@ namespace FuXi
         public string AppVersion;
         //加密算法
         public string EncryptType;
+        //资源根路径
+        public string RootPath;
+        //是否开启断点续传
+        public bool OpenBreakResume;
         
         public AssetManifest[] Assets;
         public BundleManifest[] Bundles;
@@ -69,7 +73,7 @@ namespace FuXi
     }
 
     /// <summary>
-    /// 分包信息
+    /// 分包信息 DLC
     /// </summary>
     [Serializable]
     public struct PackageManifest
@@ -79,7 +83,7 @@ namespace FuXi
         /// </summary>
         public string PackageName;
         /// <summary>
-        /// 分包包含的Bundle ID
+        /// 分包包含的Bundle ID 只包含独有资源Bundle, 如果有依赖共享的则在公共部分
         /// </summary>
         public int[] Bundles;
     }

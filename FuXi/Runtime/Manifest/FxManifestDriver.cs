@@ -50,6 +50,10 @@ namespace FuXi
             this.encryptType = encryptType;
         }
 
+        internal string CombineAssetPath(string loadPath)
+        {
+            return $"{this.NewManifest.RootPath}{loadPath}";
+        }
         /// <summary>
         /// 初始化解密接口
         /// </summary>

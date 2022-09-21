@@ -61,7 +61,8 @@ namespace FuXi
 
                 var resumeLength = fileStream.Length;
                 // 注意：设置本地文件流的起始位置, 断点续传
-                if (resumeLength > 0) fileStream.Seek(resumeLength, SeekOrigin.Begin);
+                if (resumeLength > 0 && FuXiManager.ManifestVC.NewManifest.OpenBreakResume) 
+                    fileStream.Seek(resumeLength, SeekOrigin.Begin);
                 
                 var webRequest = this.CreateWebRequest(resumeLength);
                 webResponse = webRequest.GetResponse();

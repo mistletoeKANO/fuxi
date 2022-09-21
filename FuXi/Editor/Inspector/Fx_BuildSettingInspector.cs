@@ -13,6 +13,7 @@ namespace FuXi.Editor
             public static readonly GUIContent ExtensionName = EditorGUIUtility.TrTextContent("AB包拓展名");
             public static readonly GUIContent FxPlatform = EditorGUIUtility.TrTextContent("配置所属平台");
             public static readonly GUIContent EncryptType = EditorGUIUtility.TrTextContent("加密类型");
+            public static readonly GUIContent OpenBreakResume = EditorGUIUtility.TrTextContent("开启断点续传");
             public static readonly GUIContent CopyAllBundle2Player = EditorGUIUtility.TrTextContent("拷贝所有Bundle到安装包");
             public static readonly GUIContent ExcludeExtensions = EditorGUIUtility.TrTextContent("忽略打包文件后缀");
             public static readonly GUIContent BuiltinPackages = EditorGUIUtility.TrTextContent("首包包含的分包");
@@ -22,6 +23,7 @@ namespace FuXi.Editor
         SerializedProperty m_ExtensionName;
         SerializedProperty m_FxPlatform;
         SerializedProperty m_EncryptType;
+        SerializedProperty m_OpenBreakResume;
         SerializedProperty m_CopyAllBundle2Player;
         SerializedProperty m_ExcludeExtensions;
         SerializedProperty m_BuiltinPackages;
@@ -36,6 +38,7 @@ namespace FuXi.Editor
             this.m_ExtensionName = serializedObject.FindProperty("ExtensionName");
             this.m_FxPlatform = serializedObject.FindProperty("FxPlatform");
             this.m_EncryptType = serializedObject.FindProperty("EncryptType");
+            this.m_OpenBreakResume = serializedObject.FindProperty("OpenBreakResume");
             this.m_CopyAllBundle2Player = serializedObject.FindProperty("CopyAllBundle2Player");
             this.m_ExcludeExtensions = serializedObject.FindProperty("ExcludeExtensions");
             this.m_BuiltinPackages = serializedObject.FindProperty("BuiltinPackages");
@@ -72,6 +75,7 @@ namespace FuXi.Editor
                 this.m_EncryptType.stringValue = this.encryptOptions[selectIndex];
                 this.encryptSelectIndex = selectIndex;
             }
+            EditorGUILayout.PropertyField(this.m_OpenBreakResume, Style.OpenBreakResume);
             EditorGUILayout.PropertyField(this.m_CopyAllBundle2Player, Style.CopyAllBundle2Player);
             if (EditorGUI.EndChangeCheck())
             {

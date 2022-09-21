@@ -26,7 +26,7 @@ namespace FuXi
 
         internal FxScene(string path, bool additive, bool immediate, Action<float> callback)
         {
-            this.m_ScenePath = path;
+            this.m_ScenePath = FuXiManager.ManifestVC.CombineAssetPath(path);
             this.m_LoadMode = additive ? LoadSceneMode.Additive : LoadSceneMode.Single;
             this.m_Immediate = immediate;
             this.m_BundleLoader = new BundleLoader();

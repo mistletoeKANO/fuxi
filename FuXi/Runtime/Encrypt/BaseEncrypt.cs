@@ -3,6 +3,13 @@ namespace FuXi
 {
     public abstract class BaseEncrypt
     {
+        internal static readonly System.Collections.Generic.List<System.Type> InternalReference =
+            new System.Collections.Generic.List<System.Type>()
+            {
+                typeof(FuXi.FxEncryptXor),
+                typeof(FuXi.FxEncryptOffset),
+            };
+        
         /// <summary>
         /// 加密头
         /// </summary>

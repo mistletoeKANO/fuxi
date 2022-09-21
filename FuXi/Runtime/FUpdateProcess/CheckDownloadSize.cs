@@ -92,8 +92,10 @@ namespace FuXi
                         var bm = this.m_BundleManifest.Dequeue();
                         var downloadState = FuXiManager.ManifestVC.Downloaded(bm.BundleHashName);
                         if (downloadState.Valid) continue;
-
-                        this.DownloadInfo.DownloadSize += bm.Size - downloadState.Size;
+                        if (FuXiManager.ManifestVC.NewManifest.OpenBreakResume)
+                            this.DownloadInfo.DownloadSize += bm.Size - downloadState.Size;
+                        else
+                            this.DownloadInfo.DownloadSize += bm.Size;
                         this.DownloadInfo.DownloadList.Enqueue(bm);
                     }
                     break;
