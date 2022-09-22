@@ -29,6 +29,7 @@ namespace FuXi.Editor
             Fx_BuildSetting buildSetting =
                 UnityEditor.AssetDatabase.LoadAssetAtPath<Fx_BuildSetting>(AssetDatabase.GetAssetPath(buildAsset));
             manifest.RootPath = buildSetting.BundleRootPath;
+            manifest.EncryptType = buildSetting.EncryptType;
             
             List<AssetManifest> assetManifests = new List<AssetManifest>();
 

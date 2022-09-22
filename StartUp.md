@@ -26,7 +26,7 @@ B： 或者 拷贝以下内容 到 Packages/manifest.json
         }
     ],
     "dependencies": {
-        "com.tendo.fuxi": "1.2.0"
+        "com.tendo.fuxi": "1.2.1"
     }
 }
 ````
