@@ -83,6 +83,17 @@ namespace FuXi
                 }
                 else
                 {
+                    if(this.m_CurStep == CheckVersionSteps.CheckLocalVersion){
+                        FxDebug.LogError(this.m_UnityWebRequest.error);
+                        this.m_LocalVer =  "";
+                        FxDebug.Log($"Local Version Hash:{this.m_LocalVer}");
+                        this.m_CurUrl = this.m_ServerVersion;
+                        this.SendWebRequest(this.m_ServerVersion);
+                        this.m_CurStep = CheckVersionSteps.DownloadServerVersion;
+                        this.m_StepNum++; 
+                        this.m_CurRetryCount = 0;
+                        return; 
+                    }
                     this.isDone = true;
                     FxDebug.LogError(this.m_UnityWebRequest.error);
                     this.tcs.SetResult(default);
