@@ -8,9 +8,9 @@ namespace FuXi
     {
         private enum CheckVersionSteps
         {
-            CheckLocalVersion,
+            DownloadLocalVersion,
             DownloadServerVersion,
-            CheckServerVersion,
+            CompareVersionHash,
             DownloadServerManifest,
         }
         
@@ -52,7 +52,7 @@ namespace FuXi
             this.m_StepNum = 0;
             this.m_CurUrl = this.m_LocalVersion;
             this.SendWebRequest(this.m_LocalVersion);
-            this.m_CurStep = CheckVersionSteps.CheckLocalVersion;
+            this.m_CurStep = CheckVersionSteps.DownloadLocalVersion;
             return tcs;
         }
 
@@ -72,60 +72,70 @@ namespace FuXi
             this.m_UpdateProgress?.Invoke(this.progress);
             if (!this.m_AsyncOperation.isDone) return;
             
-            if (!string.IsNullOrEmpty(this.m_UnityWebRequest.error))
-            {
-                if (this.m_CurRetryCount < this.m_RetryCount)
-                {
-                    this.m_CurRetryCount++;
-                    FxDebug.ColorLog(FX_LOG_CONTROL.Red, "Retry download {0} retry count: {1}.",
-                        this.m_CurUrl, this.m_CurRetryCount);
-                    this.SendWebRequest(this.m_CurUrl);
-                }
-                else
-                {
-                    this.isDone = true;
-                    FxDebug.LogError(this.m_UnityWebRequest.error);
-                    this.tcs.SetResult(default);
-                }
-                return;
-            }
-            else this.m_CurRetryCount = 0;
-
             switch (this.m_CurStep)
             {
-                case CheckVersionSteps.CheckLocalVersion:
-                    this.m_LocalVer = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);
-                    FxDebug.Log($"Local Version Hash:{this.m_LocalVer}");
-                    
+                case CheckVersionSteps.DownloadLocalVersion:
+                    if (!string.IsNullOrEmpty(this.m_UnityWebRequest.error))
+                    {
+                        if (this.CheckRetry())
+                            break;
+                        FxDebug.LogError($"Load local version hash with error: {this.m_UnityWebRequest.error}");
+                        this.m_LocalVer = "errorLocalVer";
+                    }else
+                    {
+                        this.m_LocalVer = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);
+                        FxDebug.Log($"Local Version Hash:{this.m_LocalVer}");
+                    }
+
                     this.m_CurUrl = this.m_ServerVersion;
                     this.SendWebRequest(this.m_ServerVersion);
                     this.m_CurStep = CheckVersionSteps.DownloadServerVersion;
                     this.m_StepNum++;
                     break;
                 case CheckVersionSteps.DownloadServerVersion:
-                    this.m_ServerVer = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);
+                    if (!string.IsNullOrEmpty(this.m_UnityWebRequest.error))
+                    {
+                        if (this.CheckRetry())
+                            break;
+                        FxDebug.LogError($"Load server version hash with error: {this.m_UnityWebRequest.error}");
+                        this.m_ServerVer = "errorServerVer";
+                    }else
+                    {
+                        this.m_ServerVer = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);
+                        FxDebug.Log($"Server Version Hash:{this.m_ServerVer}");
+                    }
+                    
                     FuXiManager.ManifestVC.NewHash = this.m_ServerVer;
-                    FxDebug.Log($"Server Version Hash:{this.m_ServerVer}");
-                    this.m_CurStep = CheckVersionSteps.CheckServerVersion;
+                    this.m_CurStep = CheckVersionSteps.CompareVersionHash;
                     this.m_StepNum++;
                     break;
-                case CheckVersionSteps.CheckServerVersion:
+                case CheckVersionSteps.CompareVersionHash:
                     if (this.m_LocalVer == this.m_ServerVer)
                     {
                         this.isDone = true;
-                        this.tcs.SetResult(default);
-                    }
-                    else
+                        this.tcs.SetResult(this);
+                    }else
                     {
+                        this.m_CurUrl = this.m_ServerManifest;
                         this.SendWebRequest(this.m_ServerManifest);
                         this.m_CurStep = CheckVersionSteps.DownloadServerManifest;
                     }
                     this.m_StepNum++;
                     break;
                 case CheckVersionSteps.DownloadServerManifest:
-                    var readValue = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);
-                    FuXiManager.ManifestVC.NewManifest = FxManifest.Parse(readValue);
-                    FxDebug.Log($"Download Server Manifest: {this.m_ServerManifest}");
+                    if (!string.IsNullOrEmpty(this.m_UnityWebRequest.error))
+                    {
+                        if (this.CheckRetry())
+                            break;
+                        FxDebug.LogError($"Download Server Manifest with error: {this.m_UnityWebRequest.error}");
+                    }else
+                    {
+                        var readValue = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);
+                        FuXiManager.ManifestVC.NewManifest = FxManifest.Parse(readValue);
+                        FuXiManager.ManifestVC.InitEncrypt();
+                        FxDebug.Log($"Download Server Manifest: {this.m_ServerManifest}");
+                    }
+
                     this.progress = 1;
                     this.isDone = true;
                     this.tcs.SetResult(this);
@@ -133,9 +143,24 @@ namespace FuXi
             }
         }
 
+        private bool CheckRetry()
+        {
+            if (this.m_CurRetryCount >= this.m_RetryCount)
+            {
+                this.m_CurRetryCount = 0;
+                return false;
+            }
+            
+            this.m_CurRetryCount++;
+            FxDebug.ColorLog(FX_LOG_CONTROL.Red, "Retry download {0} retry count: {1}.", this.m_CurUrl, this.m_CurRetryCount);
+            this.SendWebRequest(this.m_CurUrl);
+            return true;
+        }
+
         protected override void Dispose()
         {
-            if (this.m_UnityWebRequest == null) return;
+            if (this.m_UnityWebRequest == null) 
+                return;
             
             this.m_UnityWebRequest.Dispose();
             this.m_UnityWebRequest = null;

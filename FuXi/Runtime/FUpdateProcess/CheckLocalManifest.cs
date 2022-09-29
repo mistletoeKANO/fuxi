@@ -7,7 +7,6 @@ namespace FuXi
     {
         private enum CheckLocalMStep
         {
-            CheckFile,
             LoadFile,
             ParseManifest,
         }
@@ -21,7 +20,15 @@ namespace FuXi
         internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
-            this.m_Step = CheckLocalMStep.CheckFile;
+            var manifestPath = FxPathHelper.PersistentLoadPath(FuXiManager.ManifestVC.ManifestName);
+            if (!System.IO.File.Exists(manifestPath))
+            {
+                manifestPath = FxPathHelper.StreamingLoadPath(FuXiManager.ManifestVC.ManifestName);
+                manifestPath = FxPathHelper.ConvertToWWWPath(manifestPath);
+            }else
+                manifestPath = FxPathHelper.PersistentLoadURL(manifestPath);
+            this.m_UrlOrPath = manifestPath;
+            this.m_Step = CheckLocalMStep.LoadFile;
             return tcs;
         }
 
@@ -31,17 +38,6 @@ namespace FuXi
 
             switch (this.m_Step)
             {
-                case CheckLocalMStep.CheckFile:
-                    var manifestPath = FxPathHelper.PersistentLoadPath(FuXiManager.ManifestVC.ManifestName);
-                    if (!System.IO.File.Exists(manifestPath))
-                    {
-                        manifestPath = FxPathHelper.StreamingLoadPath(FuXiManager.ManifestVC.ManifestName);
-                        manifestPath = FxPathHelper.ConvertToWWWPath(manifestPath);
-                    }else
-                        manifestPath = FxPathHelper.PersistentLoadURL(manifestPath);
-                    this.m_UrlOrPath = manifestPath;
-                    this.m_Step = CheckLocalMStep.LoadFile;
-                    break;
                 case CheckLocalMStep.LoadFile:
                     this.m_UnityWebRequest = UnityWebRequest.Get(this.m_UrlOrPath);
                     this.m_UnityWebRequest.disposeDownloadHandlerOnDispose = true;
@@ -54,14 +50,14 @@ namespace FuXi
                     if (!this.m_UnityWebRequest.isDone) return;
                     if (string.IsNullOrEmpty(this.m_UnityWebRequest.error))
                     {
-                        FxDebug.Log($"Load local manifest file: {this.m_UrlOrPath}");
+                        FxDebug.ColorLog(FX_LOG_CONTROL.Orange, "Load Local manifest file: {0}", this.m_UrlOrPath);
                         var readValue = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);
                         FuXiManager.ManifestVC.OldManifest = FxManifest.Parse(readValue);
                         FuXiManager.ManifestVC.NewManifest = FuXiManager.ManifestVC.OldManifest;
                     }
                     else
                     {
-                        FxDebug.LogError($"Load local manifest file failure with error: {this.m_UnityWebRequest.error}!");
+                        FxDebug.LogError($"Load Local manifest file failure with error: {this.m_UnityWebRequest.error}!");
                         FuXiManager.ManifestVC.OldManifest = new FxManifest();
                         FuXiManager.ManifestVC.NewManifest = new FxManifest();
                     }
@@ -74,7 +70,8 @@ namespace FuXi
 
         protected override void Dispose()
         {
-            if (this.m_UnityWebRequest == null) return;
+            if (this.m_UnityWebRequest == null) 
+                return;
             
             this.m_UnityWebRequest.Dispose();
             this.m_UnityWebRequest = null;
