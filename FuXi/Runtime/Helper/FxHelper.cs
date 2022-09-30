@@ -36,6 +36,24 @@ namespace FuXi
             return $"{StreamingRootPath()}/{path}";
         }
 
+        internal static string StreamingLoadURL(string path)
+        {
+            var strPath = StreamingLoadPath(path);
+            switch (Application.platform)
+            {
+                case RuntimePlatform.Android:
+                    return strPath;
+                case RuntimePlatform.WindowsPlayer:
+                case RuntimePlatform.WindowsEditor:
+                    return $"file:///{strPath}";
+                case RuntimePlatform.IPhonePlayer:
+                case RuntimePlatform.OSXPlayer:
+                case RuntimePlatform.OSXEditor:
+                    return $"file://{strPath}";
+            }
+            return strPath;
+        }
+
         internal static string StreamingRootPath()
         {
             return $"{UnityEngine.Application.streamingAssetsPath}/{BundlePathName}";
@@ -49,6 +67,24 @@ namespace FuXi
             return $"{PersistentRootPath()}/{path}";
         }
 
+        internal static string PersistentLoadURL(string path)
+        {
+            var perStr = PersistentLoadPath(path);
+            switch (Application.platform)
+            {
+                case RuntimePlatform.Android:
+                    return $"jar:file://{perStr}";
+                case RuntimePlatform.WindowsPlayer:
+                case RuntimePlatform.WindowsEditor:
+                    return perStr;
+                case RuntimePlatform.IPhonePlayer:
+                case RuntimePlatform.OSXPlayer:
+                case RuntimePlatform.OSXEditor:
+                    return $"file://{perStr}";
+            }
+            return perStr;
+        }
+
         /// <summary>
         /// 获取bundle缓存文件夹路径
         /// </summary>
@@ -56,43 +92,6 @@ namespace FuXi
         {
             var path = $"{UnityEngine.Application.persistentDataPath}/{BundleCacheDir}";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            return path;
-        }
-        
-        /// <summary>
-        /// application.persistentDataPath 的UnityWebRequest.Get
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        internal static string PersistentLoadURL(string path)
-        {
-            switch (Application.platform)
-            {
-                case RuntimePlatform.Android:
-                    return $"file://{path}";
-                case RuntimePlatform.WindowsPlayer:
-                case RuntimePlatform.WindowsEditor:
-                    return $"file:///{path}";
-                case RuntimePlatform.IPhonePlayer:
-                case RuntimePlatform.OSXPlayer:
-                case RuntimePlatform.OSXEditor:
-                    return $"file://{path}";
-            }
-            return path;
-        }
-
-        /// <summary>
-        /// 获取网络资源加载路径
-        /// </summary>
-        internal static string ConvertToWWWPath(string path)
-        {
-            switch (Application.platform)
-            {
-                case RuntimePlatform.OSXEditor:
-                case RuntimePlatform.OSXPlayer:
-                case RuntimePlatform.IPhonePlayer:
-                    return $"file://{path}";
-            }
             return path;
         }
     }

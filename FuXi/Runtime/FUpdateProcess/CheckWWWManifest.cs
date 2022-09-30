@@ -35,13 +35,9 @@ namespace FuXi
         public CheckWWWManifest(System.Action<float> updateProgress)
         {
             this.m_UpdateProgress = updateProgress;
-            this.m_LocalVersion = FxPathHelper.PersistentLoadPath(FuXiManager.ManifestVC.VersionName);
+            this.m_LocalVersion = FxPathHelper.PersistentLoadURL(FuXiManager.ManifestVC.VersionName);
             if (!System.IO.File.Exists(this.m_LocalVersion))
-            {
-                this.m_LocalVersion = FxPathHelper.StreamingLoadPath(FuXiManager.ManifestVC.VersionName);
-                this.m_LocalVersion = FxPathHelper.ConvertToWWWPath(this.m_LocalVersion);
-            }else
-                this.m_LocalVersion = FxPathHelper.PersistentLoadURL(this.m_LocalVersion);
+                this.m_LocalVersion = FxPathHelper.StreamingLoadURL(FuXiManager.ManifestVC.VersionName);
             this.m_ServerVersion = $"{FuXiManager.PlatformURL}{FuXiManager.ManifestVC.VersionName}";
             this.m_ServerManifest = $"{FuXiManager.PlatformURL}{FuXiManager.ManifestVC.ManifestName}";
         }
@@ -127,7 +123,8 @@ namespace FuXi
                     {
                         if (this.CheckRetry())
                             break;
-                        FxDebug.LogError($"Download Server Manifest with error: {this.m_UnityWebRequest.error}");
+                        FxDebug.ColorError(FX_LOG_CONTROL.Red, "Download Server Manifest {0} with error: {1}",
+                            this.m_CurUrl, this.m_UnityWebRequest.error);
                     }else
                     {
                         var readValue = System.Text.Encoding.UTF8.GetString(this.m_UnityWebRequest.downloadHandler.data);

@@ -199,8 +199,9 @@ namespace FuXi
             var path = FxPathHelper.PersistentLoadPath(manifest.BundleHashName);
             if (File.Exists(path) && FxUtility.FileMd5(path) == manifest.Hash)
                 return path;
-            if (!this.OldManifest.Name2BundleManifest.TryGetValue(manifest.BundleHashName, out var oldManifest)) return default;
-            if (oldManifest.IsBuiltin && oldManifest.Hash == manifest.Hash)
+            if (!this.OldManifest.Name2BundleManifest.TryGetValue(manifest.BundleHashName, out var oldManifest)) 
+                return String.Empty;
+            if (manifest.IsBuiltin && oldManifest.Hash == manifest.Hash)
             {
                 return FxPathHelper.StreamingLoadPath(manifest.BundleHashName);
             }

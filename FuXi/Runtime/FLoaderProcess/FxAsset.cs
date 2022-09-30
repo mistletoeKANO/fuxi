@@ -9,14 +9,13 @@ namespace FuXi
         private enum LoadSteps
         {
             LoadBundle,
-            LoadAsset,
-            Finished,
+            LoadAsset
         }
         private readonly bool m_LoadImmediate;
-        private BundleLoader m_BundleLoader;
+        private readonly BundleLoader m_BundleLoader;
         private AssetBundleRequest m_BundleRequest;
         private LoadSteps m_LoadStep;
-        private Action<FxAsset> m_Completed;
+        private readonly Action<FxAsset> m_Completed;
 
         internal readonly FxReference fxReference;
         internal AssetManifest manifest;
@@ -68,7 +67,6 @@ namespace FuXi
         protected override void Update()
         {
             if (this.isDone) return;
-
             switch (this.m_LoadStep)
             {
                 case LoadSteps.LoadBundle:
@@ -79,22 +77,21 @@ namespace FuXi
                     }
                     if (this.m_BundleLoader.mainLoader.assetBundle == null)
                     {
-                        this.m_LoadStep = LoadSteps.Finished;
+                        this.isDone = true;
+                        this.m_Completed?.Invoke(this);
+                        this.tcs.SetResult(this);
                         return;
                     }
-                    this.m_BundleRequest =
-                        this.m_BundleLoader.mainLoader.assetBundle.LoadAssetAsync(this.m_FilePath, this.m_Type);
+                    this.m_BundleRequest = this.m_BundleLoader.mainLoader.assetBundle.LoadAssetAsync(this.m_FilePath, this.m_Type);
                     this.m_LoadStep = LoadSteps.LoadAsset;
                     break;
                 case LoadSteps.LoadAsset:
-                    if (!this.m_BundleRequest.isDone) return;
+                    if (!this.m_BundleRequest.isDone) 
+                        return;
                     this.asset = this.m_BundleRequest.asset;
-                    this.m_LoadStep = LoadSteps.Finished;
-                    break;
-                case LoadSteps.Finished:
                     this.isDone = true;
-                    this.tcs.SetResult(this);
                     this.m_Completed?.Invoke(this);
+                    this.tcs.SetResult(this);
                     break;
             }
         }

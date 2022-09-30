@@ -20,13 +20,9 @@ namespace FuXi
         internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
-            var manifestPath = FxPathHelper.PersistentLoadPath(FuXiManager.ManifestVC.ManifestName);
+            var manifestPath = FxPathHelper.PersistentLoadURL(FuXiManager.ManifestVC.ManifestName);
             if (!System.IO.File.Exists(manifestPath))
-            {
-                manifestPath = FxPathHelper.StreamingLoadPath(FuXiManager.ManifestVC.ManifestName);
-                manifestPath = FxPathHelper.ConvertToWWWPath(manifestPath);
-            }else
-                manifestPath = FxPathHelper.PersistentLoadURL(manifestPath);
+                manifestPath = FxPathHelper.StreamingLoadURL(FuXiManager.ManifestVC.ManifestName);
             this.m_UrlOrPath = manifestPath;
             this.m_Step = CheckLocalMStep.LoadFile;
             return tcs;
@@ -57,7 +53,8 @@ namespace FuXi
                     }
                     else
                     {
-                        FxDebug.LogError($"Load Local manifest file failure with error: {this.m_UnityWebRequest.error}!");
+                        FxDebug.ColorError(FX_LOG_CONTROL.Red, "Load Local manifest file {0} failure with error: {1}!", 
+                            this.m_UrlOrPath, this.m_UnityWebRequest.error);
                         FuXiManager.ManifestVC.OldManifest = new FxManifest();
                         FuXiManager.ManifestVC.NewManifest = new FxManifest();
                     }

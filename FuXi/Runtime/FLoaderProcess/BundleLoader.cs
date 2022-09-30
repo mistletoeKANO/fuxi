@@ -4,9 +4,18 @@ namespace FuXi
 {
     public class BundleLoader
     {
+        private enum LoadStep
+        {
+            CheckDownload,
+            LoadBundle,
+        }
+        
         internal bool isDone;
         internal float progress;
         internal DependBundleLoader mainLoader;
+
+        private LoadStep m_Step;
+        private List<Downloader> m_Downloader;
         private List<DependBundleLoader> m_LoaderList;
 
         internal void StartLoad(AssetManifest manifest, bool immediate)
@@ -17,22 +26,52 @@ namespace FuXi
                 this.isDone = true;
                 return;
             }
+            this.m_Downloader = new List<Downloader>();
             this.m_LoaderList = new List<DependBundleLoader>();
+            
             if (FuXiManager.ManifestVC.TryGetBundleManifest(manifest.HoldBundle, out var bundleManifest))
             {
-                if (!DependBundleLoader.TryReferenceBundle(bundleManifest, out this.mainLoader))
-                    this.mainLoader.StartLoad(immediate);
-                this.m_LoaderList.Add(this.mainLoader);
+                if (DependBundleLoader.TryReferenceBundle(bundleManifest, out this.mainLoader))
+                    this.m_LoaderList.Add(this.mainLoader);
+
+                var loadPath = FuXiManager.ManifestVC.BundleRealLoadPath(bundleManifest);
+                if (string.IsNullOrEmpty(loadPath))
+                    this.m_Downloader.Add(new Downloader(bundleManifest));
             }
             if (manifest.DependBundles.Length > 0)
             {
                 foreach (var index in manifest.DependBundles)
                 {
                     if (!FuXiManager.ManifestVC.TryGetBundleManifest(index, out bundleManifest)) continue;
-                    if (!DependBundleLoader.TryReferenceBundle(bundleManifest, out var bundleLoader))
-                        bundleLoader.StartLoad(immediate);
-                    this.m_LoaderList.Add(bundleLoader);
+                    if (DependBundleLoader.TryReferenceBundle(bundleManifest, out var bundleLoader))
+                        this.m_LoaderList.Add(bundleLoader);
+
+                    var loadPath = FuXiManager.ManifestVC.BundleRealLoadPath(bundleManifest);
+                    if (string.IsNullOrEmpty(loadPath))
+                        this.m_Downloader.Add(new Downloader(bundleManifest));
                 }
+            }
+            
+            if (this.m_Downloader.Count > 0)
+            {
+                if (immediate)
+                    FxDebug.ColorError(FX_LOG_CONTROL.Red, "Asset's {0} Bundle or depend bundle is not downloaded, cant load sync!",
+                        manifest.Path);
+                else
+                {
+                    foreach (var downloader in m_Downloader)
+                        downloader.StartDownload();
+                    this.m_Step = LoadStep.CheckDownload;
+                }
+            }
+            else
+            {
+                foreach (var loader in m_LoaderList)
+                {
+                    if (loader.isDone) continue;
+                    loader.StartLoad(immediate);
+                }
+                this.m_Step = LoadStep.LoadBundle;
             }
             this.isDone = immediate;
         }
@@ -40,17 +79,45 @@ namespace FuXi
         internal void Update()
         {
             if (this.isDone) return;
-            bool isFinished = true;
-            float pro = 0.0f;
-            foreach (var bundleLoader in this.m_LoaderList)
+
+            switch (this.m_Step)
             {
-                pro += bundleLoader.progress;
-                if (bundleLoader.isDone) continue;
-                bundleLoader.Update();
-                isFinished = bundleLoader.isDone;
+                case LoadStep.CheckDownload:
+                    bool isFinishedDownload = true;
+                    foreach (var download in m_Downloader)
+                    {
+                        if (download.isDone) continue;
+                        isFinishedDownload = false;
+                        download.Update();
+                    }
+                    if (!isFinishedDownload)
+                        break;
+                    foreach (var download in m_Downloader)
+                        download.Dispose();
+                    this.m_Downloader.Clear();
+                    foreach (var loader in m_LoaderList)
+                    {
+                        if (loader.isDone) continue;
+                        loader.StartLoad();
+                    }
+                    this.m_Step = LoadStep.LoadBundle;
+                    break;
+                case LoadStep.LoadBundle:
+                    isFinishedDownload = true;
+                    float progressBase = 0.0f;
+                    foreach (var bundleLoader in m_LoaderList)
+                    {
+                        progressBase += bundleLoader.progress;
+                        if (bundleLoader.isDone) continue;
+                        bundleLoader.Update();
+                        isFinishedDownload = false;
+                    }
+                    this.progress = progressBase / this.m_LoaderList.Count;
+                    if (!isFinishedDownload)
+                        break;
+                    this.isDone = true;
+                    break;
             }
-            this.progress = pro / this.m_LoaderList.Count;
-            this.isDone = isFinished;
         }
 
         internal void Release()
