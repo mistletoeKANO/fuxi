@@ -50,6 +50,21 @@ namespace FuXi.Editor
         private static bool OnMapAssetOpened(int instanceId, int line)
         {
             var path = AssetDatabase.GetAssetPath(instanceId);
+            var asset = EditorUtility.InstanceIDToObject (instanceId);
+            switch (asset) {
+                case Fx_BuildAsset fx_buildAsset:
+                    var fx_BuildAssetWindow = EditorWindow.GetWindow<Fx_BuildAssetWindow> ();
+                    fx_BuildAssetWindow.SetAsset (fx_buildAsset);
+                    return true;
+                case Fx_BuildPackage fx_package:
+                    var fx_packageWindow = EditorWindow.GetWindow<Fx_BuildPackageWindow> ();
+                    fx_packageWindow.SetAsset (fx_package);
+                    return true;
+                case Fx_BuildSetting fx_setting:
+                    var fx_settingeWindow = EditorWindow.GetWindow<Fx_BuildSettingWindow> ();
+                    fx_settingeWindow.SetAsset (fx_setting);
+                    return true;
+            }
             var instance = AssetDatabase.LoadAssetAtPath<Fx_BuildAsset>(path);
             if (instance == null) return false;
             EditorWindow.GetWindow<Fx_BundleReferenceWindow>();
