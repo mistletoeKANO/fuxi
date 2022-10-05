@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEditor.UIElements;
@@ -10,6 +10,7 @@ namespace FuXi.Editor {
     internal class Fx_BuildSettingWindow : EditorWindow, IHasCustomMenu {
 
         static class Style {
+            public static readonly GUIContent Title = EditorGUIUtility.TrTextContent ("相关设置");
             public static readonly GUIContent BundleRootPath = EditorGUIUtility.TrTextContent ("资源根路径", "AssetBundle 资源 根路径");
             public static readonly GUIContent ExtensionName = EditorGUIUtility.TrTextContent ("AB包拓展名");
             public static readonly GUIContent FxPlatform = EditorGUIUtility.TrTextContent ("配置所属平台");
@@ -59,6 +60,8 @@ namespace FuXi.Editor {
         }
 
         private void OnEnable () {
+            this.titleContent = Style.Title;
+
              OnRefresh();
         }
 
