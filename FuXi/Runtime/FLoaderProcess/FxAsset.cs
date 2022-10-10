@@ -30,7 +30,7 @@ namespace FuXi
 
         internal FxAsset(string path, Type type, bool loadImmediate, Action<FxAsset> callback)
         {
-            this.m_FilePath = FuXiManager.ManifestVC.CombineAssetPath(path);
+            this.m_FilePath = path;
             this.m_Type = type;
             this.m_LoadImmediate = loadImmediate;
             this.m_Completed = callback;

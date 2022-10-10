@@ -31,8 +31,8 @@ namespace FuXi
             
             if (FuXiManager.ManifestVC.TryGetBundleManifest(manifest.HoldBundle, out var bundleManifest))
             {
-                if (DependBundleLoader.TryReferenceBundle(bundleManifest, out this.mainLoader))
-                    this.m_LoaderList.Add(this.mainLoader);
+                DependBundleLoader.TryReferenceBundle(bundleManifest, out this.mainLoader);
+                this.m_LoaderList.Add(this.mainLoader);
 
                 var loadPath = FuXiManager.ManifestVC.BundleRealLoadPath(bundleManifest);
                 if (string.IsNullOrEmpty(loadPath))
@@ -43,8 +43,8 @@ namespace FuXi
                 foreach (var index in manifest.DependBundles)
                 {
                     if (!FuXiManager.ManifestVC.TryGetBundleManifest(index, out bundleManifest)) continue;
-                    if (DependBundleLoader.TryReferenceBundle(bundleManifest, out var bundleLoader))
-                        this.m_LoaderList.Add(bundleLoader);
+                    DependBundleLoader.TryReferenceBundle(bundleManifest, out var bundleLoader);
+                    this.m_LoaderList.Add(bundleLoader);
 
                     var loadPath = FuXiManager.ManifestVC.BundleRealLoadPath(bundleManifest);
                     if (string.IsNullOrEmpty(loadPath))

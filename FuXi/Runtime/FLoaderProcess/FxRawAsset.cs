@@ -22,7 +22,7 @@ namespace FuXi
 
         protected FxRawAsset(string path)
         {
-            this.m_PathOrURL = FuXiManager.ManifestVC.CombineAssetPath(path);
+            this.m_PathOrURL = path;
         }
         internal override FTask<FxAsyncTask> Execute()
         {

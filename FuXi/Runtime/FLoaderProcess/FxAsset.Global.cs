@@ -13,6 +13,7 @@ namespace FuXi
 
         private static FxAsset ReferenceAsset(string path, Type type, bool immediate, Action<FxAsset> callback)
         {
+            path = FuXiManager.ManifestVC.CombineAssetPath(path);
             if (!AssetCache.TryGetValue(path, out var fxAsset))
             {
                 fxAsset = FxAssetCreate.Invoke(path, type, immediate, callback);
