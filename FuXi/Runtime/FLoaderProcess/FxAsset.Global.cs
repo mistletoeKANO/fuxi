@@ -18,7 +18,8 @@ namespace FuXi
             {
                 fxAsset = FxAssetCreate.Invoke(path, type, immediate, callback);
                 AssetCache.Add(path, fxAsset);
-            }
+            }else
+                fxAsset.Reset(path, type, immediate, callback);
             fxAsset.AddReference();
             return fxAsset;
         }

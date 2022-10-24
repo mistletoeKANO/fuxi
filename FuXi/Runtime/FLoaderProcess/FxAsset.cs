@@ -11,11 +11,11 @@ namespace FuXi
             LoadBundle,
             LoadAsset
         }
-        private readonly bool m_LoadImmediate;
+        private bool m_LoadImmediate;
         private readonly BundleLoader m_BundleLoader;
         private AssetBundleRequest m_BundleRequest;
         private LoadSteps m_LoadStep;
-        private readonly Action<FxAsset> m_Completed;
+        private Action<FxAsset> m_Completed;
 
         internal readonly FxReference fxReference;
         internal AssetManifest manifest;
@@ -24,8 +24,8 @@ namespace FuXi
         internal string stackInfo;
 #endif
         
-        protected readonly string m_FilePath;
-        protected readonly Type m_Type;
+        protected string m_FilePath;
+        protected Type m_Type;
         public UnityEngine.Object asset;
 
         internal FxAsset(string path, Type type, bool loadImmediate, Action<FxAsset> callback)
@@ -37,6 +37,15 @@ namespace FuXi
             this.m_BundleLoader = new BundleLoader();
             this.fxReference = new FxReference();
         }
+
+        private void Reset(string path, Type type, bool loadImmediate, Action<FxAsset> callback)
+        {
+            this.m_FilePath = path;
+            this.m_Type = type;
+            this.m_LoadImmediate = loadImmediate;
+            this.m_Completed = callback;
+        }
+        
         internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
