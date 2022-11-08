@@ -20,9 +20,11 @@ namespace FuXi
         internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
-            var manifestPath = FxPathHelper.PersistentLoadURL(FuXiManager.ManifestVC.ManifestName);
+            var manifestPath = FxPathHelper.PersistentLoadPath(FuXiManager.ManifestVC.ManifestName);
             if (!System.IO.File.Exists(manifestPath))
                 manifestPath = FxPathHelper.StreamingLoadURL(FuXiManager.ManifestVC.ManifestName);
+            else
+                manifestPath = FxPathHelper.PersistentLoadURL(FuXiManager.ManifestVC.ManifestName);
             this.m_UrlOrPath = manifestPath;
             this.m_Step = CheckLocalMStep.LoadFile;
             return tcs;
