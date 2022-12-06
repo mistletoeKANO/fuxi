@@ -86,6 +86,10 @@ namespace FuXi
         /// 分包包含的Bundle ID 只包含独有资源Bundle, 如果有依赖共享的则在公共部分
         /// </summary>
         public int[] Bundles;
+        /// <summary>
+        /// 是否是内置DLC
+        /// </summary>
+        public bool IsBuiltin;
     }
     
     /// <summary>

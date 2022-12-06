@@ -1,4 +1,7 @@
 ﻿// ReSharper disable once CheckNamespace
+
+using UnityEngine;
+
 namespace FuXi
 {
     public struct FX_LOG_CONTROL
@@ -6,9 +9,9 @@ namespace FuXi
         public static FX_LOG_TYPE LogLevel = FX_LOG_TYPE.LOG | FX_LOG_TYPE.WARNING | FX_LOG_TYPE.ERROR;
         
         public static UnityEngine.Color Red = UnityEngine.Color.red;
-        public static UnityEngine.Color Green = UnityEngine.Color.green;
-        public static UnityEngine.Color Cyan = UnityEngine.Color.cyan;
-        public static UnityEngine.Color LightCyan = new UnityEngine.Color(0.69f, 1f, 0.93f);
+        public static UnityEngine.Color Green = new Color(0.01f, 0.38f, 0f);
+        public static UnityEngine.Color Cyan = new Color(0f, 0.57f, 0.57f);
+        public static UnityEngine.Color LightCyan = new Color(0.22f, 0.32f, 0.3f);
         public static UnityEngine.Color Orange = new UnityEngine.Color(1f, 0.35f, 0f);
     }
 

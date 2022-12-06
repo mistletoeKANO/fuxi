@@ -156,10 +156,7 @@ namespace FuXi
 
         protected override void Dispose()
         {
-            if (this.m_UnityWebRequest == null) 
-                return;
-            
-            this.m_UnityWebRequest.Dispose();
+            this.m_UnityWebRequest?.Dispose();
             this.m_UnityWebRequest = null;
             this.m_AsyncOperation = null;
         }

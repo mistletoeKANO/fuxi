@@ -152,6 +152,9 @@ namespace FuXi
             List<int> res = new List<int>();
             foreach (var package in this.NewManifest.Packages)
             {
+                //内置DLC不作为 独立 DLC单独下载, 在主更新下载中检查更新
+                if (package.IsBuiltin)
+                    continue;
                 foreach (var index in package.Bundles)
                 {
                     if (res.Contains(index)) continue;
@@ -193,17 +196,20 @@ namespace FuXi
         /// 获取Bundle加载路径
         /// </summary>
         /// <param name="manifest"></param>
+        /// <param name="rawFile"></param>
         /// <returns></returns>
-        internal string BundleRealLoadPath(BundleManifest manifest)
+        internal string BundleRealLoadPath(BundleManifest manifest, bool rawFile = false)
         {
             var path = FxPathHelper.PersistentLoadPath(manifest.BundleHashName);
             if (File.Exists(path) && FxUtility.FileMd5(path) == manifest.Hash)
-                return path;
+                return !rawFile? path : FxPathHelper.PersistentLoadURL(manifest.BundleHashName);
             if (!this.OldManifest.Name2BundleManifest.TryGetValue(manifest.BundleHashName, out var oldManifest)) 
                 return String.Empty;
             if (manifest.IsBuiltin && oldManifest.Hash == manifest.Hash)
             {
-                return FxPathHelper.StreamingLoadPath(manifest.BundleHashName);
+                return !rawFile
+                    ? FxPathHelper.StreamingLoadPath(manifest.BundleHashName)
+                    : FxPathHelper.StreamingLoadURL(manifest.BundleHashName);
             }
             return String.Empty;
         }

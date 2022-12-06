@@ -168,15 +168,14 @@ namespace FuXi.Editor
             for (int i = 0; i < count; i++)
             {
                 var package = this.buildPackages[i];
+                if (package.PackageObjects == null) continue;
                 if (this.IsBundlePackageNameRepeated(package.name))
                 {
                     throw new Exception($"Bundle package name is repeated: {package.name}");
                 }
-                //内置包不作为独立DLC
-                if (this.buildSetting.BuiltinPackages.Contains(package))
-                    continue;
                 var bundlePackage = new BundlePackage {packageName = package.name, bundles = new List<string>()};
-                if (package.PackageObjects == null) continue;
+                if (this.buildSetting.BuiltinPackages.Contains(package))
+                    bundlePackage.isBuiltin = true;
                 int length = package.PackageObjects.Count;
                 for (int j = 0; j < length; j++)
                 {
@@ -371,6 +370,7 @@ namespace FuXi.Editor
                 var package = this.m_Packages[i];
                 fxManifest.Packages[i].PackageName = package.packageName;
                 fxManifest.Packages[i].Bundles = new int[package.bundles.Count];
+                fxManifest.Packages[i].IsBuiltin = package.isBuiltin;
                 for (int j = 0; j < package.bundles.Count; j++)
                 {
                     fxManifest.Packages[i].Bundles[j] = hashName2Id[package.bundles[j]];
@@ -534,6 +534,7 @@ namespace FuXi.Editor
         {
             internal string packageName;
             internal List<string> bundles;
+            internal bool isBuiltin;
         }
     }
 }

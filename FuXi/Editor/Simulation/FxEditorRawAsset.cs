@@ -12,9 +12,9 @@ namespace FuXi.Editor
         internal override FTask<FxAsyncTask> Execute()
         {
             base.Execute();
-            this.Data = File.ReadAllBytes(this.m_PathOrURL);
             this.isDone = true;
             this.tcs.SetResult(this);
+            this.Data = File.ReadAllBytes(this.m_PathOrURL);
             return this.tcs;
         }
     }
