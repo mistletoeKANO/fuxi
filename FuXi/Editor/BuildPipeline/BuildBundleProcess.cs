@@ -20,11 +20,12 @@ namespace FuXi.Editor
         private readonly Fx_BuildSetting buildSetting;
         private readonly List<Fx_BuildPackage> buildPackages;
         private readonly List<IBuildBundlePreprocess> bundlePreprocesses;
-        
+
         private BaseEncrypt mEncrypt;
         private AssetBundleManifest manifest;
         private Dictionary<string, string> name2HashName;
         private bool cancel;
+        private List<string> versionDiffFile;
         
         internal BuildBundleProcess(Fx_BuildAsset asset)
         {
@@ -416,21 +417,22 @@ namespace FuXi.Editor
             if (!Directory.Exists(verDir))
                 Directory.CreateDirectory(verDir);
 
-            var diffs = newManifest.Name2BundleManifest.Keys.Except(oldManifest.Name2BundleManifest.Keys).ToList();
-            for (int i = 0; i < diffs.Count; i++)
+            var diffList = newManifest.Name2BundleManifest.Keys.Except(oldManifest.Name2BundleManifest.Keys).ToList();
+            var manifestName = $"{trimName}{FxPathHelper.ManifestFileExtension}";
+            diffList.Add(manifestName);
+            var verName = $"{trimName}{FxPathHelper.VersionFileExtension}";
+            diffList.Add(verName);
+
+            this.versionDiffFile = new List<string>();
+            for (int i = 0; i < diffList.Count; i++)
             {
-                EditorUtility.DisplayProgressBar("Copy version difference bundle.", diffs[i], i / (float) diffs.Count);
-                var path = FxBuildPath.BundleFullPath(diffs[i]);
-                var save = $"{verDir}/{diffs[i]}";
+                var fileName = diffList[i];
+                EditorUtility.DisplayProgressBar("Copy version difference bundle.", fileName, i / (float) diffList.Count);
+                var path = FxBuildPath.BundleFullPath(fileName);
+                var save = $"{verDir}/{fileName}";
                 File.Copy(path, save, true);
+                this.versionDiffFile.Add(path);
             }
-            var manifestSourcePath = FxBuildPath.BundleFullPath($"{trimName}{FxPathHelper.ManifestFileExtension}");
-            var manifestSavePath = $"{verDir}/{trimName}{FxPathHelper.ManifestFileExtension}";
-            File.Copy(manifestSourcePath, manifestSavePath);
-            
-            var verSourcePath = FxBuildPath.BundleFullPath($"{trimName}{FxPathHelper.VersionFileExtension}");
-            var verSavePath = $"{verDir}/{trimName}{FxPathHelper.VersionFileExtension}";
-            File.Copy(verSourcePath, verSavePath);
         }
 
         private void RemoveUnityManifest()
@@ -512,7 +514,7 @@ namespace FuXi.Editor
         private void BuildBundlePostProcess()
         {
             foreach (var process in this.bundlePreprocesses)
-                process.BuildBundlePost();
+                process.BuildBundlePost(this.versionDiffFile);
         }
         
         public void OnAssetValueChanged() => EditorUtility.SetDirty(this.buildAsset);
