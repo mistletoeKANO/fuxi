@@ -60,7 +60,7 @@ namespace FuXi
             }
             if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.OFFSET)
             {
-                ulong offset = (ulong) FuXiManager.ManifestVC.GameEncrypt.EncryptOffset().Length;
+                ulong offset = (ulong) FuXiManager.ManifestVC.GameEncrypt.HeadLength;
                 this.assetBundle = AssetBundle.LoadFromFile(this.m_PathOrURL, 0, offset);
             }
             else if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.XOR)
@@ -69,7 +69,7 @@ namespace FuXi
                 {
                     byte[] buffer = new byte[fileStream.Length];
                     fileStream.Read(buffer, 0, buffer.Length);
-                    buffer = FuXiManager.ManifestVC.GameEncrypt.DeEncrypt(buffer);
+                    buffer = FuXiManager.ManifestVC.GameEncrypt.Decrypt(buffer);
                     this.assetBundle = AssetBundle.LoadFromMemory(buffer, 0);
                 }
             }
@@ -84,7 +84,7 @@ namespace FuXi
             }
             if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.OFFSET)
             {
-                ulong offset = (ulong) FuXiManager.ManifestVC.GameEncrypt.EncryptOffset().Length;
+                ulong offset = (ulong) FuXiManager.ManifestVC.GameEncrypt.HeadLength;
                 this.m_BundleRequest = AssetBundle.LoadFromFileAsync(this.m_PathOrURL, 0, offset);
             }
             else if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.XOR)
@@ -93,7 +93,7 @@ namespace FuXi
                 {
                     byte[] buffer = new byte[fileStream.Length];
                     fileStream.Read(buffer, 0, buffer.Length);
-                    buffer = FuXiManager.ManifestVC.GameEncrypt.DeEncrypt(buffer);
+                    buffer = FuXiManager.ManifestVC.GameEncrypt.Decrypt(buffer);
                     this.m_BundleRequest = AssetBundle.LoadFromMemoryAsync(buffer, 0);
                 }
             }

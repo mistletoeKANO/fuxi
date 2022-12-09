@@ -6,7 +6,8 @@ namespace FuXi
     /// <summary>
     /// 伏羲内置加密, 全字节异或加密
     /// </summary>
-    public class FxEncryptXor : BaseEncrypt
+    [UnityEngine.Scripting.Preserve]
+    public sealed class FxEncryptXor : BaseEncrypt
     {
         protected override string EncryptHeader => "FxEncryptXOR";
 
@@ -17,6 +18,11 @@ namespace FuXi
         
         public override EncryptMode EncryptMode => EncryptMode.XOR;
 
+        public FxEncryptXor()
+        {
+            header = System.Text.Encoding.UTF8.GetBytes(EncryptHeader);
+        }
+        
         /// <summary>
         /// 加密
         /// </summary>
@@ -25,8 +31,6 @@ namespace FuXi
         public override byte[] Encrypt(byte[] sourceBytes)
         {
             if (this.IsEncrypted(sourceBytes)) return sourceBytes;
-            
-            byte[] header = System.Text.Encoding.UTF8.GetBytes(EncryptHeader);
             byte[] buffer = new byte[header.Length + sourceBytes.Length];
             header.CopyTo(buffer, 0);
             
@@ -41,11 +45,9 @@ namespace FuXi
         /// </summary>
         /// <param name="sourceBytes"></param>
         /// <returns></returns>
-        public override byte[] DeEncrypt(byte[] sourceBytes)
+        public override byte[] Decrypt(byte[] sourceBytes)
         {
             if (!this.IsEncrypted(sourceBytes)) return sourceBytes;
-            
-            byte[] header = System.Text.Encoding.UTF8.GetBytes(EncryptHeader);
             byte[] buffer = new byte[sourceBytes.Length - header.Length];
             Array.Copy(sourceBytes, header.Length, buffer, 0, buffer.Length);
             return this.EncryptInternal(buffer);

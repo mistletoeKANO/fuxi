@@ -3,13 +3,7 @@ namespace FuXi
 {
     public abstract class BaseEncrypt
     {
-        internal static readonly System.Collections.Generic.List<object> InternalReference =
-            new System.Collections.Generic.List<object>()
-            {
-                new FuXi.FxEncryptXor(),
-                new FuXi.FxEncryptOffset(),
-            };
-        
+        protected byte[] header;
         /// <summary>
         /// 加密头
         /// </summary>
@@ -18,7 +12,10 @@ namespace FuXi
         /// 加密模式
         /// </summary>
         public virtual EncryptMode EncryptMode => EncryptMode.OFFSET;
-
+        /// <summary>
+        /// 加密头长度
+        /// </summary>
+        public virtual int HeadLength { get; }
         /// <summary>
         /// 验证是否已经加密
         /// </summary>
@@ -26,7 +23,6 @@ namespace FuXi
         /// <returns></returns>
         internal bool IsEncrypted(byte[] sourceBytes)
         {
-            byte[] header = System.Text.Encoding.UTF8.GetBytes(EncryptHeader);
             for (int i = 0; i < header.Length; i++)
             {
                 if (header[i] != sourceBytes[i]) return false;
@@ -52,6 +48,6 @@ namespace FuXi
         /// </summary>
         /// <param name="sourceBytes"></param>
         /// <returns></returns>
-        public virtual byte[] DeEncrypt(byte[] sourceBytes) { return sourceBytes; }
+        public virtual byte[] Decrypt(byte[] sourceBytes) { return sourceBytes; }
     }
 }

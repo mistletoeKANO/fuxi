@@ -224,10 +224,12 @@ namespace FuXi
             {
                 var versionDest = FxPathHelper.PersistentLoadPath(this.VersionName);
                 File.WriteAllText(versionDest, this.NewHash);
+                FxDebug.ColorLog(FX_LOG_CONTROL.Orange, "Override VersionFile! new hash {0}", this.NewHash);
             
                 var manifestDest = FxPathHelper.PersistentLoadPath(this.ManifestName);
                 string content = JsonUtility.ToJson(this.NewManifest);
                 File.WriteAllText(manifestDest, content);
+                FxDebug.ColorLog(FX_LOG_CONTROL.Orange, "Override Manifest! new version {0}", this.NewManifest.ResVersion);
             }
             catch (Exception e)
             {

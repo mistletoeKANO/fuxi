@@ -70,14 +70,14 @@ namespace FuXi
                         {
                             if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.OFFSET)
                             {
-                                var header = FuXiManager.ManifestVC.GameEncrypt.EncryptOffset();
-                                int newSize = this.Data.Length - header.Length;
-                                System.Array.Copy(this.Data, header.Length, this.Data, 0, newSize);
+                                var headerLength = FuXiManager.ManifestVC.GameEncrypt.HeadLength;
+                                int newSize = this.Data.Length - headerLength;
+                                System.Array.Copy(this.Data, headerLength, this.Data, 0, newSize);
                                 System.Array.Resize(ref this.Data, newSize);
                             }
                             else if (FuXiManager.ManifestVC.GameEncrypt.EncryptMode == EncryptMode.XOR)
                             {
-                                this.Data = FuXiManager.ManifestVC.GameEncrypt.DeEncrypt(this.Data);
+                                this.Data = FuXiManager.ManifestVC.GameEncrypt.Decrypt(this.Data);
                             }
                         }
                         FxDebug.ColorLog(FX_LOG_CONTROL.Cyan, "Load RawAsset {0}", this.m_PathOrURL);

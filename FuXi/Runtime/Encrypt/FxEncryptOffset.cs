@@ -4,7 +4,8 @@ namespace FuXi
     /// <summary>
     /// 伏羲内置加密, 文件头偏移加密
     /// </summary>
-    public class FxEncryptOffset : BaseEncrypt
+    [UnityEngine.Scripting.Preserve]
+    public sealed class FxEncryptOffset : BaseEncrypt
     {
         protected override string EncryptHeader => "FxEncryptOffset";
         /// <summary>
@@ -14,12 +15,17 @@ namespace FuXi
 
         public override EncryptMode EncryptMode => EncryptMode.OFFSET;
 
+        public override int HeadLength => header.Length + encryptBytes.Length;
+
+        public FxEncryptOffset()
+        {
+            header = System.Text.Encoding.UTF8.GetBytes(EncryptHeader);
+        }
+        
         public override byte[] Encrypt(byte[] sourceBytes)
         {
             if (this.IsEncrypted(sourceBytes)) return sourceBytes;
-            byte[] header = System.Text.Encoding.UTF8.GetBytes(EncryptHeader);
             byte[] buffer = new byte[sourceBytes.Length + encryptBytes.Length + header.Length];
-            
             header.CopyTo(buffer, 0);
             encryptBytes.CopyTo(buffer, header.Length);
             sourceBytes.CopyTo(buffer, header.Length + encryptBytes.Length);
@@ -32,7 +38,6 @@ namespace FuXi
         /// <returns></returns>
         public override byte[] EncryptOffset()
         {
-            byte[] header = System.Text.Encoding.UTF8.GetBytes(EncryptHeader);
             byte[] buffer = new byte[header.Length + encryptBytes.Length];
             header.CopyTo(buffer, 0);
             encryptBytes.CopyTo(buffer, header.Length);

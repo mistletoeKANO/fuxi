@@ -35,9 +35,11 @@ namespace FuXi
         public CheckWWWManifest(System.Action<float> updateProgress)
         {
             this.m_UpdateProgress = updateProgress;
-            this.m_LocalVersion = FxPathHelper.PersistentLoadURL(FuXiManager.ManifestVC.VersionName);
+            this.m_LocalVersion = FxPathHelper.PersistentLoadPath(FuXiManager.ManifestVC.VersionName);
             if (!System.IO.File.Exists(this.m_LocalVersion))
                 this.m_LocalVersion = FxPathHelper.StreamingLoadURL(FuXiManager.ManifestVC.VersionName);
+            else
+                this.m_LocalVersion = FxPathHelper.PersistentLoadURL(FuXiManager.ManifestVC.VersionName);
             this.m_ServerVersion = $"{FuXiManager.PlatformURL}{FuXiManager.ManifestVC.VersionName}";
             this.m_ServerManifest = $"{FuXiManager.PlatformURL}{FuXiManager.ManifestVC.ManifestName}";
         }
