@@ -92,8 +92,6 @@ namespace FuXi
                     }
                     if (!isFinishedDownload)
                         break;
-                    foreach (var download in m_Downloader)
-                        download.Dispose();
                     this.m_Downloader.Clear();
                     foreach (var loader in m_LoaderList)
                     {

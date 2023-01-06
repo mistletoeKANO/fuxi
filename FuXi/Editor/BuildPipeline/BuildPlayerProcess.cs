@@ -108,10 +108,6 @@ namespace FuXi.Editor
             }
 
             var manifest = JsonUtility.FromJson<FxManifest>(readStr);
-            for (int i = 0; i < manifest.Bundles.Length; i++)
-            {
-                manifest.Bundles[i].IsBuiltin = false;
-            }
             if (manifest.Packages.Length == 0)
             {
                 Debug.LogWarning("manifest package array is empty!");
@@ -150,7 +146,6 @@ namespace FuXi.Editor
                     {
                         var bundleName = manifest.Bundles[bundleId].BundleHashName;
                         if (builtinBundles.Contains(bundleName)) continue;
-                        manifest.Bundles[bundleId].IsBuiltin = true;
                         builtinBundles.Add(bundleName);
                     }
                 }

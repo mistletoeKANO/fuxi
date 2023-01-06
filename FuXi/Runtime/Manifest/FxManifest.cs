@@ -101,9 +101,6 @@ namespace FuXi
         public string BundleHashName;
         public string CRC;
         public string Hash;
-        /// <summary>
-        /// 只在 是否 拷贝进 安装包时 确定是否是 内置资源
-        /// </summary>
         public bool IsBuiltin;
         public long Size;
     }

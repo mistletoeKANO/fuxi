@@ -58,7 +58,6 @@ namespace FuXi
                         this.m_Downloader.Update();
                         return;
                     }
-                    this.m_Downloader.Dispose();
                     this.LoadInternal();
                     break;
                 case LoadStep.LoadFile:

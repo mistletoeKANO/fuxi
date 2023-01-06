@@ -15,6 +15,7 @@ namespace FuXi
         private readonly Queue<BundleManifest> m_BundleList;
         private List<Downloader> m_Downloading;
         private List<Downloader> m_DownloadFinished;
+        private List<Downloader> m_Temp;
 
         private CheckDownloadStep m_DownloadStep;
 
@@ -40,6 +41,7 @@ namespace FuXi
             this.m_CheckDownload = checkDownload;
             this.m_Downloading = new List<Downloader>(this.m_MaxDownloadCount);
             this.m_DownloadFinished = new List<Downloader>();
+            this.m_Temp = new List<Downloader>();
         }
 
         internal override FTask<FxAsyncTask> Execute()
@@ -59,6 +61,8 @@ namespace FuXi
                 case CheckDownloadStep.Downloading:
                     while (this.m_Downloading.Count < this.m_MaxDownloadCount && this.m_BundleList.Count > 0)
                     {
+                        if (UnityEngine.Application.internetReachability == UnityEngine.NetworkReachability.NotReachable)
+                            break;
                         var d = new Downloader(this.m_BundleList.Dequeue());
                         this.m_Downloading.Add(d);
                         d.StartDownload();
@@ -70,24 +74,27 @@ namespace FuXi
                         this.m_CurDownloadSize += d.DownloadSize;
                     }
                     
-                    for (int i = 0; i < this.m_Downloading.Count; i++)
+                    foreach (var downloader in this.m_Downloading)
                     {
-                        var downloader = this.m_Downloading[i];
                         this.m_CurDownloadSize += downloader.DownloadSize;
-                        
                         downloader.Update();
                         if (!downloader.isDone) continue;
                         
-                        this.m_Downloading.RemoveAt(i);
-                        this.m_DownloadFinished.Add(downloader);
+                        this.m_Temp.Add(downloader);
+                        if (string.IsNullOrEmpty(downloader.error))
+                            this.m_DownloadFinished.Add(downloader);
+                        else
+                            this.m_BundleList.Enqueue(downloader.m_BundleManifest);
                     }
-
-                    if (this.m_Downloading.Count == 0 && this.m_BundleList.Count == 0)
-                    {
-                        this.m_DownloadStep = CheckDownloadStep.Finished;
-                    }
+                    foreach (var down in m_Temp)
+                        this.m_Downloading.Remove(down);
+                    this.m_Temp.Clear();
+                    
                     this.progress = (float) this.m_CurDownloadSize / (float) this.m_DownloadSize;
                     this.m_CheckDownload?.Invoke(this);
+                    
+                    if (this.m_Downloading.Count <= 0 && this.m_BundleList.Count <= 0)
+                        this.m_DownloadStep = CheckDownloadStep.Finished;
                     break;
                 case CheckDownloadStep.Finished:
                     FuXiManager.ManifestVC.OverrideManifest();
@@ -100,15 +107,14 @@ namespace FuXi
         protected override void Dispose()
         {
             base.Dispose();
-            foreach (var d in this.m_DownloadFinished) d.Dispose();
-            foreach (var d in this.m_Downloading) d.Dispose();
-            
             this.m_Downloading.Clear();
             this.m_DownloadFinished.Clear();
             this.m_BundleList.Clear();
+            this.m_Temp.Clear();
 
             this.m_Downloading = null;
             this.m_DownloadFinished = null;
+            this.m_Temp = null;
         }
     }
 }

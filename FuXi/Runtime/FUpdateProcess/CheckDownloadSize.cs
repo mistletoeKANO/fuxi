@@ -59,7 +59,10 @@ namespace FuXi
                         for (int i = 0; i < length; i++)
                         {
                             if (packageBundles.Contains(i)) continue;
-                            this.m_BundleManifest.Enqueue(FuXiManager.ManifestVC.NewManifest.Bundles[i]);
+                            var bd = FuXiManager.ManifestVC.NewManifest.Bundles[i];
+                            if (this.m_BundleManifest.Contains(bd))
+                                continue;
+                            this.m_BundleManifest.Enqueue(bd);
                         }
                     }
                     this.progress = 0.1f;
@@ -82,22 +85,21 @@ namespace FuXi
                     this.m_CheckStep = CheckSteps.checkValid;
                     break;
                 case CheckSteps.checkValid:
-                    if (this.m_BundleManifest.Count == 0)
-                    {
-                        this.m_CheckStep = CheckSteps.Finished;
-                        break;
-                    }
                     while (this.m_BundleManifest.Count > 0)
                     {
                         var bm = this.m_BundleManifest.Dequeue();
                         var downloadState = FuXiManager.ManifestVC.Downloaded(bm.BundleHashName);
-                        if (downloadState.Valid) continue;
+                        if (downloadState.Valid)
+                        {
+                            continue;
+                        }
                         if (FuXiManager.ManifestVC.NewManifest.OpenBreakResume)
                             this.DownloadInfo.DownloadSize += bm.Size - downloadState.Size;
                         else
                             this.DownloadInfo.DownloadSize += bm.Size;
                         this.DownloadInfo.DownloadList.Enqueue(bm);
                     }
+                    this.m_CheckStep = CheckSteps.Finished;
                     break;
                 case CheckSteps.Finished:
                     this.progress = 1f;

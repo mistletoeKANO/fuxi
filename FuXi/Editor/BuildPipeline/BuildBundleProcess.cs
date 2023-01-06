@@ -332,6 +332,16 @@ namespace FuXi.Editor
                 Bundles = new BundleManifest[this.m_BundleName2Builds.Count],
                 Assets = new AssetManifest[this.m_Asset2BundleName.Count]
             };
+            List<string> builtinBmList = new List<string>();
+            foreach (var bp in this.m_Packages)
+            {
+                if (!bp.isBuiltin) continue;
+                foreach (var bd in bp.bundles)
+                {
+                    if (!builtinBmList.Contains(bd))
+                        builtinBmList.Add(bd);
+                }
+            }
 
             int index2Id = 0;
             Dictionary<string, int> hashName2Id = new Dictionary<string, int>();
@@ -344,6 +354,7 @@ namespace FuXi.Editor
                 fxManifest.Bundles[index2Id].Hash = FxUtility.FileMd5(bundlePath);
                 fxManifest.Bundles[index2Id].CRC = FxUtility.FileCrc32(bundlePath);
                 fxManifest.Bundles[index2Id].Size = FxUtility.FileSize(bundlePath);
+                fxManifest.Bundles[index2Id].IsBuiltin = builtinBmList.Contains(hsName);
                 hashName2Id.Add(hsName, index2Id);
                 index2Id++;
             }

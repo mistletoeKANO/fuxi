@@ -13,7 +13,6 @@ namespace FuXi
     {
         public long DownloadSize;
         public Queue<BundleManifest> DownloadList;
-        public string FormatSize => FxUtility.FormatBytes(this.DownloadSize);
     }
 
     /// <summary>
@@ -174,7 +173,7 @@ namespace FuXi
             if (!this.NewManifest.Name2BundleManifest.TryGetValue(bundleName, out var manifest))
             {
                 FxDebug.ColorWarning(FX_LOG_CONTROL.Orange, "bundle {0} is not valid", bundleName);
-                return default;
+                return new DownloadState {Valid = false};
             }
             var path = FxPathHelper.PersistentLoadPath(bundleName);
             if (File.Exists(path))
@@ -184,12 +183,9 @@ namespace FuXi
                 else
                     return new DownloadState {Valid = false, Size = FxUtility.FileSize(path)};
             }
-            if (!this.OldManifest.Name2BundleManifest.TryGetValue(bundleName, out var oldManifest)) return default;
-            if (oldManifest.IsBuiltin && oldManifest.Hash == manifest.Hash)
-            {
+            if (this.OldManifest.Name2BundleManifest.TryGetValue(bundleName, out var oldManifest) && oldManifest.IsBuiltin) 
                 return new DownloadState {Valid = true};
-            }
-            return default;
+            return new DownloadState {Valid = false};
         }
 
         /// <summary>
@@ -202,14 +198,12 @@ namespace FuXi
         {
             var path = FxPathHelper.PersistentLoadPath(manifest.BundleHashName);
             if (File.Exists(path) && FxUtility.FileMd5(path) == manifest.Hash)
-                return !rawFile? path : FxPathHelper.PersistentLoadURL(manifest.BundleHashName);
-            if (!this.OldManifest.Name2BundleManifest.TryGetValue(manifest.BundleHashName, out var oldManifest)) 
-                return String.Empty;
-            if (manifest.IsBuiltin && oldManifest.Hash == manifest.Hash)
+                return rawFile? FxPathHelper.PersistentLoadURL(manifest.BundleHashName) : path;
+            
+            if (this.OldManifest.Name2BundleManifest.TryGetValue(manifest.BundleHashName, out var oldManifest) && oldManifest.IsBuiltin)
             {
-                return !rawFile
-                    ? FxPathHelper.StreamingLoadPath(manifest.BundleHashName)
-                    : FxPathHelper.StreamingLoadURL(manifest.BundleHashName);
+                return rawFile ? FxPathHelper.StreamingLoadURL(manifest.BundleHashName)
+                    : FxPathHelper.StreamingLoadPath(manifest.BundleHashName);
             }
             return String.Empty;
         }

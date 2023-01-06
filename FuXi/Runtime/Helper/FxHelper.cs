@@ -11,12 +11,13 @@ namespace FuXi
         
         internal static readonly string BundlePathName = "Bundles";
         private  static readonly string BundleCacheDir = "BundleCache";
+        
         /// <summary>
         /// 获取规范化的路径
         /// </summary>
         private static string GetRegularPath(string path)
         {
-            return path.Replace('\\', '/').Replace("\\", "/"); //替换为Linux路径格式
+            return path.Replace('\\', '/').Replace("\\", "/");
         }
 
         /// <summary>
@@ -54,11 +55,16 @@ namespace FuXi
             return strPath;
         }
 
-        internal static string StreamingRootPath()
+        private static string streamingRootPath;
+        private static string StreamingRootPath()
         {
-            return $"{UnityEngine.Application.streamingAssetsPath}/{BundlePathName}";
+            if (string.IsNullOrEmpty(streamingRootPath))
+            {
+                streamingRootPath = $"{UnityEngine.Application.streamingAssetsPath}/{BundlePathName}";
+            }
+            return streamingRootPath;
         }
-
+        
         /// <summary>
         /// 获取基于bundle缓存文件夹的加载路径
         /// </summary>
@@ -85,14 +91,20 @@ namespace FuXi
             return perStr;
         }
 
+        private static string persistentRootPath;
         /// <summary>
         /// 获取bundle缓存文件夹路径
         /// </summary>
         internal static string PersistentRootPath()
         {
-            var path = $"{UnityEngine.Application.persistentDataPath}/{BundleCacheDir}";
-            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            return path;
+            if (string.IsNullOrEmpty(persistentRootPath))
+            {
+                var path = $"{UnityEngine.Application.persistentDataPath}/{BundleCacheDir}";
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+                persistentRootPath = GetRegularPath(path);
+            }
+            return persistentRootPath;
         }
     }
 
