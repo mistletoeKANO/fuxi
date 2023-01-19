@@ -13,12 +13,16 @@ namespace FuXi
             {
                 var p = Processes[i];
                 p.Update();
-                if (p.isDone) Processes.RemoveAt(i);
+                if (p.isDone)
+                {
+                    Processes.RemoveAt(i);
+                    i--;
+                }
                 if (AssetPolling.IsTimeOut) break;
             }
         }
 
-        internal static void ProcessQuit()
+        internal static void ClearProcess()
         {
             if (Processes.Count == 0) return;
             foreach (var p in Processes)

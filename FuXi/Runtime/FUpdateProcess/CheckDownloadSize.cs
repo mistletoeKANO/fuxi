@@ -19,25 +19,29 @@ namespace FuXi
         private readonly bool m_ContainsPackage = false;
         private string[] m_Packages;
         private Queue<BundleManifest> m_BundleManifest;
+        private FTask<CheckDownloadSize> tcs;
 
-        internal CheckDownloadSize(bool containsPackage = true, Action<float> action = null)
+        internal CheckDownloadSize(bool containsPackage = true, Action<float> action = null) : base(false)
         {
+            this.m_BundleManifest = new Queue<BundleManifest>();
             this.m_ContainsPackage = containsPackage;
             this.m_CheckUpdate = action;
         }
 
-        internal CheckDownloadSize(string[] package, Action<float> action = null)
+        internal CheckDownloadSize(string[] package, Action<float> action = null) : base(false)
         {
+            this.m_BundleManifest = new Queue<BundleManifest>();
             this.m_Packages = package;
             this.m_CheckUpdate = action;
         }
 
-        internal override FTask<FxAsyncTask> Execute()
+        internal FTask<CheckDownloadSize> Execute()
         {
-            base.Execute();
+            tcs = FTask<CheckDownloadSize>.Create(true);
             this.DownloadInfo = new DownloadInfo{DownloadList = new Queue<BundleManifest>()};
-            this.m_BundleManifest = new Queue<BundleManifest>();
             this.m_CheckStep = null != this.m_Packages ? CheckSteps.CheckPackage : CheckSteps.CheckNormal;
+            if (FuXiManager.ManifestVC.NewManifest.Bundles == null)
+                this.m_CheckStep = CheckSteps.Finished;
             return tcs;
         }
 
@@ -104,8 +108,8 @@ namespace FuXi
                 case CheckSteps.Finished:
                     this.progress = 1f;
                     this.m_CheckUpdate?.Invoke(this.progress);
-                    this.isDone = true;
                     this.tcs.SetResult(this);
+                    this.isDone = true;
                     break;
             }
         }

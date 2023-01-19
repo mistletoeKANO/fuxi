@@ -11,24 +11,40 @@ namespace FuXi
         internal static FxAsset CreateAsset(string path, Type type, bool immediate, Action<FxAsset> callback)
         { return new FxAsset(path, type, immediate, callback); }
 
-        private static FxAsset ReferenceAsset(string path, Type type, bool immediate, Action<FxAsset> callback)
+        private static FxAsset LoadInternal(string path, Type type, bool immediate)
         {
             path = FuXiManager.ManifestVC.CombineAssetPath(path);
             if (!AssetCache.TryGetValue(path, out var fxAsset))
             {
-                fxAsset = FxAssetCreate.Invoke(path, type, immediate, callback);
+                fxAsset = FxAssetCreate.Invoke(path, type, immediate, null);
+                fxAsset.Execute();
                 AssetCache.Add(path, fxAsset);
             }else
-                fxAsset.Reset(path, type, immediate, callback);
+                fxAsset.ReLoad(immediate, null);
             fxAsset.AddReference();
             return fxAsset;
         }
+        
+        private static FTask<FxAsset> LoadAsyncInternal(string path, Type type, Action<FxAsset> callback)
+        {
+            path = FuXiManager.ManifestVC.CombineAssetPath(path);
+            FTask<FxAsset> tcs;
+            if (!AssetCache.TryGetValue(path, out var fxAsset))
+            {
+                fxAsset = FxAssetCreate.Invoke(path, type, false, callback);
+                tcs = fxAsset.Execute();
+                AssetCache.Add(path, fxAsset);
+            }else
+                tcs = fxAsset.ReLoad(false, callback);
+            fxAsset.AddReference();
+            return tcs;
+        }
 
-        internal static void GameQuit()
+        internal static void ClearAssetCache()
         {
             AssetCache.Clear();
         }
-        
+
         /// <summary>
         /// 同步加载
         /// </summary>
@@ -37,8 +53,7 @@ namespace FuXi
         /// <returns></returns>
         public static FxAsset Load<T>(string path)
         {
-            var res = ReferenceAsset(path, typeof(T), true, null).Execute();
-            return (FxAsset) res.GetResult();
+            return LoadInternal(path, typeof(T), true);
         }
         
         /// <summary>
@@ -49,9 +64,7 @@ namespace FuXi
         /// <returns></returns>
         public static FxAsset Load(string path, Type type)
         {
-            var res = ReferenceAsset(path, type, true, null);
-            res.Execute();
-            return res;
+            return LoadInternal(path, type, true);
         }
 
         /// <summary>
@@ -60,10 +73,14 @@ namespace FuXi
         /// <param name="path"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static async FTask<FxAsset> LoadAsync<T>(string path)
+        public static FxAsset LoadAsyncCo<T>(string path)
         {
-            var res = await ReferenceAsset(path, typeof(T), false, null).Execute();
-            return (FxAsset) res;
+            return LoadInternal(path, typeof(T), false);
+        }
+
+        public static FTask<FxAsset> LoadAsync<T>(string path)
+        {
+            return LoadAsyncInternal(path, typeof(T), null);
         }
 
         /// <summary>
@@ -74,20 +91,7 @@ namespace FuXi
         /// <param name="callback"></param>
         public static void LoadAsync(string path, Type type, Action<FxAsset> callback)
         {
-            ReferenceAsset(path, type, false, callback).Execute();
-        }
-        
-        /// <summary>
-        /// 协程异步加载
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static FxAsset LoadCo(string path, Type type)
-        {
-            var res = ReferenceAsset(path, type, false, null);
-            res.Execute();
-            return res;
+            LoadAsyncInternal(path, type, callback);
         }
     }
 }

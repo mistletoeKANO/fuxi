@@ -6,13 +6,13 @@ namespace FuXi
 {
     public partial class DependBundleLoader
     {
-        
         internal bool isDone;
         internal float progress;
         internal AssetBundle assetBundle;
         internal readonly FxReference fxReference;
         internal long size => this.m_BundleManifest.Size;
 
+        private bool isLoading;
         private string m_PathOrURL;
         private AssetBundleCreateRequest m_BundleRequest;
         private readonly BundleManifest m_BundleManifest;
@@ -25,7 +25,9 @@ namespace FuXi
 
         internal void StartLoad(bool immediate = false)
         {
-            this.isDone = false;
+            if (this.isDone || this.isLoading)
+                return;
+                
             this.m_PathOrURL = FuXiManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest);
             
             if (immediate)
@@ -33,6 +35,7 @@ namespace FuXi
             else
                 this.LoadBundleAsyncInternal();
             this.isDone = immediate;
+            this.isLoading = !immediate;
         }
 
         internal void Update()
@@ -49,6 +52,7 @@ namespace FuXi
                 this.assetBundle = this.m_BundleRequest.assetBundle;
             }
             this.isDone = true;
+            this.isLoading = false;
         }
 
         private void LoadBundleInternal()
@@ -73,6 +77,7 @@ namespace FuXi
                     this.assetBundle = AssetBundle.LoadFromMemory(buffer, 0);
                 }
             }
+            FxDebug.ColorLog(FX_LOG_CONTROL.Cyan, "LoadBundle {0}", this.m_PathOrURL);
         }
 
         private void LoadBundleAsyncInternal()
@@ -107,8 +112,6 @@ namespace FuXi
         internal void SubReference()
         {
             if (!this.fxReference.SubRef()) return;
-            if (this.fxReference.RefCount < 0)
-                FxDebug.ColorWarning(FX_LOG_CONTROL.Orange, "Release over: {0}", this.m_BundleManifest.BundleHashName);
             ReleaseBundleLoader(this.m_BundleManifest);
         }
     }

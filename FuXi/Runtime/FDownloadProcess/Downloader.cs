@@ -36,6 +36,13 @@ namespace FuXi
                 return;
             this.isDone = this.m_ThreadDownloader.isDone;
 
+            if (UnityEngine.Time.realtimeSinceStartup - this.curTime > this.timeout)
+            {
+                this.isDone = true;
+                this.error = "Download timeout.";
+                this.m_ThreadDownloader.Abort();
+                return;
+            }
             if (this.isDone)
             {
                 if (!string.IsNullOrEmpty(this.m_ThreadDownloader.error))
@@ -46,13 +53,6 @@ namespace FuXi
                 else
                     FxDebug.ColorLog(FX_LOG_CONTROL.Green, "Download bundle {0}", this.m_BundleManifest.BundleHashName);
                 this.m_ThreadDownloader.Dispose();
-            }
-            if (UnityEngine.Time.realtimeSinceStartup - this.curTime > this.timeout)
-            {
-                this.isDone = true;
-                this.error = "Download timeout.";
-                this.m_ThreadDownloader.Abort();
-                return;
             }
             if (this.lastDownloadSize != DownloadSize)
             {

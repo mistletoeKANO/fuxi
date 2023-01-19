@@ -11,15 +11,19 @@ namespace FuXi
         internal static FxRawAsset CreateRawAsset(string path)
         { return new FxRawAsset(path); }
         
-        private static FxRawAsset ReferenceAsset(string path)
+        private static FTask<FxRawAsset> ReferenceAsset(string path)
         {
             path = FuXiManager.ManifestVC.CombineAssetPath(path);
+            FTask<FxRawAsset> tcs;
             if (!RawAssetCache.TryGetValue(path, out var fxAsset))
             {
                 fxAsset = FxRawAssetCreate.Invoke(path);
+                tcs = fxAsset.Execute();
                 RawAssetCache.Add(path, fxAsset);
             }
-            return fxAsset;
+            else
+                tcs = fxAsset.GetRawAsset();
+            return tcs;
         }
 
         public static void Release(FxRawAsset rawAsset)
@@ -55,22 +59,9 @@ namespace FuXi
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static async FTask<FxRawAsset> LoadAsync(string path)
+        public static FTask<FxRawAsset> LoadAsync(string path)
         {
-            var res= await ReferenceAsset(path).Execute();
-            return (FxRawAsset) res;
-        }
-
-        /// <summary>
-        /// 异步加载
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static FxRawAsset LoadCo(string path)
-        {
-            var rawAsset = ReferenceAsset(path);
-            rawAsset.Execute();
-            return rawAsset;
+            return ReferenceAsset(path);
         }
     }
 }

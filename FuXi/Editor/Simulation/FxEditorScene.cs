@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 
@@ -12,13 +11,12 @@ namespace FuXi.Editor
         { return new FxEditorScene(path, addition, immediate, callback); }
         
         FxEditorScene(string path, bool additive, bool immediate, Action<float> callback) : base(path, additive, immediate, callback) { }
-        internal override FTask<FxAsyncTask> Execute()
+        protected override FTask<FxScene> Execute()
         {
-            base.Execute();
+            this.m_Tcs = FTask<FxScene>.Create(true);
             if (null != FuXiManager.ManifestVC && !FuXiManager.ManifestVC.TryGetAssetManifest(this.m_ScenePath, out _))
             {
-                this.tcs.SetResult(this);
-                this.isDone = true;
+                this.LoadFinished();
             }
             else
             {
@@ -26,14 +24,13 @@ namespace FuXi.Editor
                 if (this.m_Immediate)
                 {
                     EditorSceneManager.LoadSceneInPlayMode(this.m_ScenePath, new LoadSceneParameters(this.m_LoadMode));
-                    this.tcs.SetResult(this);
-                    this.isDone = true;
+                    this.LoadFinished();
                 }
                 else
                     this.m_Operation = EditorSceneManager.LoadSceneAsyncInPlayMode(this.m_ScenePath,
                         new LoadSceneParameters(this.m_LoadMode));
             }
-            return this.tcs;
+            return this.m_Tcs;
         }
 
         protected override void Update()
@@ -44,9 +41,7 @@ namespace FuXi.Editor
                 this.m_LoadUpdate?.Invoke(this.m_Operation.progress);
                 if (!this.m_Operation.isDone) return;
             }
-
-            this.tcs.SetResult(this);
-            this.isDone = true;
+            this.LoadFinished();
         }
     }
 }

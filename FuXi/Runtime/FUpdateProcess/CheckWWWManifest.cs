@@ -31,8 +31,9 @@ namespace FuXi
 
         private readonly System.Action<float> m_UpdateProgress;
         private int m_StepNum = 0;
+        private FTask<CheckWWWManifest> tcs;
 
-        public CheckWWWManifest(System.Action<float> updateProgress)
+        public CheckWWWManifest(System.Action<float> updateProgress) : base(false)
         {
             this.m_UpdateProgress = updateProgress;
             this.m_LocalVersion = FxPathHelper.PersistentLoadPath(FuXiManager.ManifestVC.VersionName);
@@ -44,9 +45,9 @@ namespace FuXi
             this.m_ServerManifest = $"{FuXiManager.PlatformURL}{FuXiManager.ManifestVC.ManifestName}";
         }
 
-        internal override FTask<FxAsyncTask> Execute()
+        internal FTask<CheckWWWManifest> Execute()
         {
-            base.Execute();
+            tcs = FTask<CheckWWWManifest>.Create(true);
             this.m_StepNum = 0;
             this.m_CurUrl = this.m_LocalVersion;
             this.SendWebRequest(this.m_LocalVersion);
@@ -134,10 +135,9 @@ namespace FuXi
                         FuXiManager.ManifestVC.InitEncrypt();
                         FxDebug.Log($"Download Server Manifest: {this.m_ServerManifest}");
                     }
-
+                    this.tcs.SetResult(this);
                     this.progress = 1;
                     this.isDone = true;
-                    this.tcs.SetResult(this);
                     break;
             }
         }

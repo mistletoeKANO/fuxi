@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,21 +11,34 @@ namespace FuXi.Editor
         { return new FxEditorAsset(path, type, immediate, callback); }
         
         FxEditorAsset(string path, Type type, bool loadImmediate, Action<FxAsset> callback) : base(path, type, loadImmediate, callback) { }
-        internal override FTask<FxAsyncTask> Execute()
+        protected override FTask<FxAsset> Execute()
         {
-            base.Execute();
+#if UNITY_EDITOR
             this.stackInfo = StackTraceUtility.ExtractStackTrace();
-            if (FuXiManager.ManifestVC == null)
+#endif
+            var tcs = FTask<FxAsset>.Create(true);
+            this.m_TcsList.Add(tcs);
+            if (FuXiManager.ManifestVC.TryGetAssetManifest(this.m_FilePath, out var _))
                 this.asset = AssetDatabase.LoadAssetAtPath(this.m_FilePath, this.m_Type);
-            else
-            {
-                if (FuXiManager.ManifestVC.TryGetAssetManifest(this.m_FilePath, out var _))
-                    this.asset = AssetDatabase.LoadAssetAtPath(this.m_FilePath, this.m_Type);
-            }
             manifest = new AssetManifest() {Path = this.m_FilePath, HoldBundle = -1};
-            this.tcs.SetResult(this);
-            this.isDone = true;
-            return this.tcs;
+            if (this.m_LoadImmediate)
+                this.LoadFinished();
+            this.m_LoadStep = LoadSteps.LoadBundle;
+            return tcs;
+        }
+
+        protected override void Update()
+        {
+            if (this.isDone) return;
+            switch (this.m_LoadStep)
+            {
+                case LoadSteps.LoadBundle:
+                    this.m_LoadStep = LoadSteps.LoadAsset;
+                    break;
+                case LoadSteps.LoadAsset:
+                    this.LoadFinished();
+                    break;
+            }
         }
     }
 }

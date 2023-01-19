@@ -107,7 +107,7 @@ namespace FuXi
         internal void Abort()
         {
             this.isDone = true;
-            this.m_Task.Dispose();
+            this.m_Task?.Dispose();
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace FuXi
 
         internal void Dispose()
         {
-            this.m_Task.Dispose();
+            this.m_Task?.Dispose();
             this.m_Task = null;
         }
         

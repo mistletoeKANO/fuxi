@@ -49,9 +49,10 @@ namespace FuXi
         /// <returns></returns>
         public static FxScene LoadScene(string path, bool additive = false)
         {
-            if (CurrentScene != null && CurrentScene.m_ScenePath == path) return CurrentScene;
-            var res = FxSceneCreate.Invoke(path, additive, true, null).Execute();
-            var scene = (FxScene) res.GetResult();
+            if (CurrentScene != null && CurrentScene.m_ScenePath == path) 
+                return CurrentScene;
+            var scene = FxSceneCreate.Invoke(path, additive, true, null);
+            scene.Execute();
             return scene;
         }
 
@@ -62,26 +63,12 @@ namespace FuXi
         /// <param name="additive"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public static async FTask<FxScene> LoadSceneAsync(string path, bool additive = false, Action<float> callback = null)
+        public static FTask<FxScene> LoadSceneAsync(string path, bool additive = false, Action<float> callback = null)
         {
-            if (CurrentScene != null && CurrentScene.m_ScenePath == path) return CurrentScene;
-            var res = await FxSceneCreate.Invoke(path, additive, false, callback).Execute();
-            var scene = (FxScene) res;
-            return scene;
-        }
-
-        /// <summary>
-        /// 协程异步加载
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="additive"></param>
-        /// <returns></returns>
-        public static FxScene LoadSceneCo(string path, bool additive = false)
-        {
-            if (CurrentScene != null && CurrentScene.m_ScenePath == path) return CurrentScene;
-            var scene = FxSceneCreate.Invoke(path, additive, false, null);
-            scene.Execute();
-            return scene;
+            if (CurrentScene != null && CurrentScene.m_ScenePath == path) 
+                return CurrentScene.GetScene();
+            var scene = FxSceneCreate.Invoke(path, additive, false, callback);
+            return scene.Execute();
         }
     }
 }

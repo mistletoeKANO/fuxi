@@ -17,6 +17,7 @@ namespace FuXi
         internal readonly bool m_Immediate;
         internal AsyncOperation m_Operation;
         internal readonly Action<float> m_LoadUpdate;
+        protected FTask<FxScene> m_Tcs;
         
         private readonly List<FxScene> m_SubScenes = new List<FxScene>();
         private readonly BundleLoader m_BundleLoader;
@@ -24,7 +25,7 @@ namespace FuXi
         private LoadSceneSteps m_LoadStep;
         private FxScene m_Parent;
 
-        internal FxScene(string path, bool additive, bool immediate, Action<float> callback)
+        internal FxScene(string path, bool additive, bool immediate, Action<float> callback) : base(immediate)
         {
             this.m_ScenePath = FuXiManager.ManifestVC.CombineAssetPath(path);
             this.m_LoadMode = additive ? LoadSceneMode.Additive : LoadSceneMode.Single;
@@ -33,15 +34,12 @@ namespace FuXi
             this.m_LoadUpdate = callback;
         }
         
-        internal override FTask<FxAsyncTask> Execute()
+        protected virtual FTask<FxScene> Execute()
         {
-            base.Execute();
-            if (FuXiManager.RuntimeMode == RuntimeMode.Editor) return null;
+            this.m_Tcs = FTask<FxScene>.Create(true);
             if (!FuXiManager.ManifestVC.TryGetAssetManifest(this.m_ScenePath, out var manifest))
             {
-                this.tcs.SetResult(this);
-                this.isDone = true;
-                return this.tcs;
+                this.LoadFinished();
             }
             RefreshRef(this);
             this.m_BundleLoader.StartLoad(manifest, this.m_Immediate);
@@ -49,11 +47,17 @@ namespace FuXi
             {
                 if (this.m_BundleLoader.mainLoader.assetBundle != null)
                     SceneManager.LoadScene(this.m_ScenePath, this.m_LoadMode);
-                this.tcs.SetResult(this);
-                this.isDone = true;
+                this.LoadFinished();
             }
             this.m_LoadStep = LoadSceneSteps.LoadBundle;
-            return this.tcs;
+            return this.m_Tcs;
+        }
+
+        private FTask<FxScene> GetScene()
+        {
+            var tcs = FTask<FxScene>.Create(true);
+            tcs.SetResult(this);
+            return tcs;
         }
 
         protected override void Update()
@@ -77,10 +81,15 @@ namespace FuXi
                         if (!this.m_Operation.isDone) return;
                     else
                         if (this.m_Operation.progress < 0.9f) return;
-                    this.isDone = true;
-                    this.tcs.SetResult(this);
+                    this.LoadFinished();
                     break;
             }
+        }
+
+        protected void LoadFinished()
+        {
+            this.isDone = true;
+            this.m_Tcs.SetResult(this);
         }
 
         private void Release()

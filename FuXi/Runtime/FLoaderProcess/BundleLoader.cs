@@ -31,7 +31,7 @@ namespace FuXi
             
             if (FuXiManager.ManifestVC.TryGetBundleManifest(manifest.HoldBundle, out var bundleManifest))
             {
-                DependBundleLoader.TryReferenceBundle(bundleManifest, out this.mainLoader);
+                DependBundleLoader.ReferenceBundle(bundleManifest, out this.mainLoader);
                 this.m_LoaderList.Add(this.mainLoader);
 
                 var loadPath = FuXiManager.ManifestVC.BundleRealLoadPath(bundleManifest);
@@ -42,8 +42,9 @@ namespace FuXi
             {
                 foreach (var index in manifest.DependBundles)
                 {
-                    if (!FuXiManager.ManifestVC.TryGetBundleManifest(index, out bundleManifest)) continue;
-                    DependBundleLoader.TryReferenceBundle(bundleManifest, out var bundleLoader);
+                    if (!FuXiManager.ManifestVC.TryGetBundleManifest(index, out bundleManifest)) 
+                        continue;
+                    DependBundleLoader.ReferenceBundle(bundleManifest, out var bundleLoader);
                     this.m_LoaderList.Add(bundleLoader);
 
                     var loadPath = FuXiManager.ManifestVC.BundleRealLoadPath(bundleManifest);
@@ -55,7 +56,7 @@ namespace FuXi
             if (this.m_Downloader.Count > 0)
             {
                 if (immediate)
-                    FxDebug.ColorError(FX_LOG_CONTROL.Red, "Asset's {0} Bundle or depend bundle is not downloaded, cant load sync!",
+                    FxDebug.ColorError(FX_LOG_CONTROL.Red, "Asset's {0} Bundle or depend bundle is not downloaded, cant load immediate!",
                         manifest.Path);
                 else
                 {
@@ -68,7 +69,6 @@ namespace FuXi
             {
                 foreach (var loader in m_LoaderList)
                 {
-                    if (loader.isDone) continue;
                     loader.StartLoad(immediate);
                 }
                 this.m_Step = LoadStep.LoadBundle;
@@ -95,7 +95,6 @@ namespace FuXi
                     this.m_Downloader.Clear();
                     foreach (var loader in m_LoaderList)
                     {
-                        if (loader.isDone) continue;
                         loader.StartLoad();
                     }
                     this.m_Step = LoadStep.LoadBundle;

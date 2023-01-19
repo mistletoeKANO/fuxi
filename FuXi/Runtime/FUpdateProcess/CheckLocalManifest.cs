@@ -15,11 +15,12 @@ namespace FuXi
         private UnityWebRequest m_UnityWebRequest;
         private string m_UrlOrPath;
         private CheckLocalMStep m_Step;
+        private FTask<CheckLocalManifest> tcs;
 
-        internal CheckLocalManifest() { }
-        internal override FTask<FxAsyncTask> Execute()
+        internal CheckLocalManifest() : base(false) { }
+        internal FTask<CheckLocalManifest> Execute()
         {
-            base.Execute();
+            tcs = FTask<CheckLocalManifest>.Create(true);
             var manifestPath = FxPathHelper.PersistentLoadPath(FuXiManager.ManifestVC.ManifestName);
             if (!System.IO.File.Exists(manifestPath))
                 manifestPath = FxPathHelper.StreamingLoadURL(FuXiManager.ManifestVC.ManifestName);
@@ -61,7 +62,7 @@ namespace FuXi
                         FuXiManager.ManifestVC.NewManifest = new FxManifest();
                     }
                     FuXiManager.ManifestVC.InitEncrypt();
-                    tcs.SetResult(this);
+                    this.tcs.SetResult(this);
                     this.isDone = true;
                     break;
             }

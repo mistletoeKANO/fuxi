@@ -16,6 +16,7 @@ namespace FuXi
         private List<Downloader> m_Downloading;
         private List<Downloader> m_DownloadFinished;
         private List<Downloader> m_Temp;
+        private FTask<CheckDownloadBundle> tcs;
 
         private CheckDownloadStep m_DownloadStep;
 
@@ -33,7 +34,7 @@ namespace FuXi
         public string FormatDownloadSize => FxUtility.FormatBytes(this.m_DownloadSize);
         public string FormatCurDownloadSize => FxUtility.FormatBytes(this.m_CurDownloadSize);
         
-        internal CheckDownloadBundle(DownloadInfo downloadInfo, Action<CheckDownloadBundle> checkDownload)
+        internal CheckDownloadBundle(DownloadInfo downloadInfo, Action<CheckDownloadBundle> checkDownload) : base(false)
         {
             this.m_BundleList = downloadInfo.DownloadList;
             this.m_DownloadSize = downloadInfo.DownloadSize;
@@ -44,12 +45,12 @@ namespace FuXi
             this.m_Temp = new List<Downloader>();
         }
 
-        internal override FTask<FxAsyncTask> Execute()
+        internal FTask<CheckDownloadBundle> Execute()
         {
-            base.Execute();
+            tcs = FTask<CheckDownloadBundle>.Create(true);
             this.m_CurDownloadSize = 0;
             this.m_DownloadStep = CheckDownloadStep.Downloading;
-            return tcs;
+            return this.tcs;
         }
 
         protected override void Update()
@@ -98,8 +99,9 @@ namespace FuXi
                     break;
                 case CheckDownloadStep.Finished:
                     FuXiManager.ManifestVC.OverrideManifest();
-                    this.isDone = true;
+                    this.progress = 1.0f;
                     this.tcs.SetResult(this);
+                    this.isDone = true;
                     break;
             }
         }

@@ -36,9 +36,9 @@ namespace FuXi
 
         private void OnApplicationQuit()
         {
-            FxAsyncTask.ProcessQuit();
-            DependBundleLoader.GameQuit();
-            FxAsset.GameQuit();
+            FxAsyncTask.ClearProcess();
+            DependBundleLoader.ClearBundleCache();
+            FxAsset.ClearAssetCache();
         }
     }
 }

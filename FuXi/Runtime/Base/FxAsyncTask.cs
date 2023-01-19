@@ -12,23 +12,18 @@ namespace FuXi
         public void Reset() { }
         public object Current => null;
 
-        internal FTask<FxAsyncTask> tcs;
-
-        internal virtual FTask<FxAsyncTask> Execute()
+        protected FxAsyncTask(bool immediate)
         {
             this.isDone = false;
             this.progress = 0;
-            tcs = FTask<FxAsyncTask>.Create(true);
-            Processes.Add(this);
-            return null;
+            if (!immediate)
+                Processes.Add(this);
         }
-
+        
         protected virtual void Update()
         {
             this.isDone = true;
-            tcs.SetResult(default);
         }
-        
         protected virtual void Dispose(){}
     }
 }

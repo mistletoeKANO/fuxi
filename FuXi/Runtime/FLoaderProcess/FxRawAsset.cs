@@ -1,10 +1,11 @@
-﻿using UnityEngine.Networking;
+﻿using System.Collections.Generic;
+using UnityEngine.Networking;
 
 namespace FuXi
 {
     public partial class FxRawAsset : FxAsyncTask
     {
-        private enum LoadStep
+        protected enum LoadStep
         {
             Download,
             LoadFile,
@@ -13,26 +14,26 @@ namespace FuXi
         private UnityWebRequest m_WebRequest;
         private UnityWebRequestAsyncOperation m_AsyncOperation;
         private BundleManifest m_BundleManifest;
-        
+
+        protected readonly List<FTask<FxRawAsset>> m_TcsList;
         protected string m_PathOrURL;
-        private LoadStep m_LoadStep;
+        protected LoadStep m_LoadStep;
 
         public byte[] Data;
         public string Text => System.Text.Encoding.Default.GetString(this.Data);
 
-        protected FxRawAsset(string path)
+        protected FxRawAsset(string path) : base(false)
         {
             this.m_PathOrURL = path;
+            this.m_TcsList = new List<FTask<FxRawAsset>>();
         }
-        internal override FTask<FxAsyncTask> Execute()
+        protected virtual FTask<FxRawAsset> Execute()
         {
-            base.Execute();
-            if (FuXiManager.RuntimeMode == RuntimeMode.Editor) return null;
+            var tcs = FTask<FxRawAsset>.Create(true);
+            this.m_TcsList.Add(tcs);
             if (!FuXiManager.ManifestVC.TryGetAssetManifest(this.m_PathOrURL, out var manifest))
             {
-                this.tcs.SetResult(this);
-                this.isDone = true;
-                return this.tcs;
+                this.LoadFinished();
             }
             FuXiManager.ManifestVC.TryGetBundleManifest(manifest.HoldBundle, out this.m_BundleManifest);
             this.m_PathOrURL = FuXiManager.ManifestVC.BundleRealLoadPath(this.m_BundleManifest, true);
@@ -44,7 +45,14 @@ namespace FuXi
             }
             else
                 this.LoadInternal();
-            return this.tcs;
+            return tcs;
+        }
+
+        private FTask<FxRawAsset> GetRawAsset()
+        {
+            var tcs = FTask<FxRawAsset>.Create(true);
+            this.m_TcsList.Add(tcs);
+            return tcs;
         }
 
         protected override void Update()
@@ -82,8 +90,7 @@ namespace FuXi
                         FxDebug.ColorLog(FX_LOG_CONTROL.Cyan, "Load RawAsset {0}", this.m_PathOrURL);
                     }else
                         FxDebug.ColorError(FX_LOG_CONTROL.Red, "FxRawAsset read file {0} bytes failure", this.m_PathOrURL);
-                    this.isDone = true;
-                    this.tcs.SetResult(this);
+                    this.LoadFinished();
                     break;
             }
         }
@@ -94,6 +101,16 @@ namespace FuXi
             this.m_WebRequest = UnityWebRequest.Get(this.m_PathOrURL);
             this.m_AsyncOperation = this.m_WebRequest.SendWebRequest();
             this.m_LoadStep = LoadStep.LoadFile;
+        }
+
+        protected void LoadFinished()
+        {
+            this.isDone = true;
+            foreach (var task in this.m_TcsList)
+            {
+                task.SetResult(this);
+            }
+            this.m_TcsList.Clear();
         }
 
         protected override void Dispose()
