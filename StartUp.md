@@ -91,5 +91,10 @@ await FxScene.LoadSceneAsync(scenePath, additive);
 ``
 5. FxRawAsset 加载 原生文件
 
+## 注意事项
+
+1.加密方式为 XOR 时,不支持内置Bundle文件到安装包内, 主要是XOR加密方式需以文件流形式读取解密, StreamingAssets文件夹 不支持相关操作! 如需 XOR 加密, Bundle 文件需先下载 后使用.
+
+2.异步加载资源才支持边玩边下载, XOR 加密 情况下 需要 异步加载, 从服务器 下载到 读写区 进行解密加载(因此首包不应包含额外资产, 否则使用 OFFSET 加密资源).
 
 
