@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,8 +19,10 @@ namespace FuXi.Editor
             public static readonly GUIContent CAboutFuXiButton =
                 EditorGUIUtility.TrTextContent("", "关于伏羲", Fx_Style.Fx_About);
             public static readonly GUIContent CFxPathMenu =
-                EditorGUIUtility.TrTextContent("", "菜单", Fx_Style.Fx_PathMenu);
+                EditorGUIUtility.TrTextContent("", "菜单", Fx_Style.Fx_Asset);
 
+            public static readonly GUIContent FFxPathMenu =
+                EditorGUIUtility.TrTextContent ("", "引用分析", Fx_Style.Fx_AssetPackage);
             public static readonly GUIContent CBundleVersion = EditorGUIUtility.TrTextContent("Bundle版本");
             public static readonly GUIContent CPlayerVersion = EditorGUIUtility.TrTextContent("安装包版本");
 
@@ -55,6 +57,9 @@ namespace FuXi.Editor
             destRect = new Rect(new Vector2(lastRect.width - 80, 5), Style.IconSize);
             if (GUI.Button(destRect, Style.CFxPathMenu, EditorExtension.EditorStyle.IconButton))
                 this.DrawPathMenu();
+            destRect = new Rect (new Vector2 (lastRect.width - 48, 5), Style.IconSize);
+            if (GUI.Button (destRect, Style.FFxPathMenu, EditorExtension.EditorStyle.IconButton))
+                EditorWindow.GetWindow<Fx_BundleReferenceWindow> ();
         }
 
         private void DrawPathMenu()
